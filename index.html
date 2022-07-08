@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Tic Tac Toe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -27,13 +28,12 @@
   </table>
   <div class="endgame">
     <div class="endgame-text"></div>
-    <button onclick="startGame()" class="reset">Replay</button>
+    <button onclick="replay()" class="endgame-reset">Replay</button>
   </div>
   <button onclick="openSettings()" class="settings-button">Settings</button>
-  <div>Difficulty: <span class="difficulty"></span></div>
   <div class="settings">
-    <button onclick="closeSettings()" class="exit-settings">X</button>
-    <div class="title">Difficulty</div>
+    <div onclick="closeSettings()" class="exit-settings">X</div>
+    <div>Difficulty: <span class="difficulty"></span></div>
     <div class="difficulty-levels">
       <button class="level" id="easy">Easy</button>
       <button class="level" id="moderate">Moderate</button>
@@ -41,7 +41,18 @@
       <button class="level" id="impossible">Impossible</button>
     </div>
     <div class="warning"></div>
-    <button onclick="startGame(); closeSettings()" class="reset">Replay</button>
+    <form class="icons">
+      <div>
+        <label for="playerName">Player Icon</label>
+        <input type="text" id="playerName" name="playerName" maxlength="1" />
+      </div>
+      <div>
+        <label for="aiName">AI Icon</label>
+        <input type="text" id="aiName" name="aiName" maxlength="1" />
+      </div>
+    </form>
+    <button onclick="replay(); closeSettings()" class="reset">Replay</button>
+    <button onclick="closeSettings()" class="close-settings">Close</button>
   </div>
   <script src="index.js"></script>
 </body>

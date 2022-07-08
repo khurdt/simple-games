@@ -1,3 +1,32 @@
+button {
+  border-radius: 10px;
+  width: 100px;
+  cursor: pointer;
+  padding: 5px;
+  background-color: lightskyblue;
+}
+
+input {
+  width: 10px;
+  padding: 7px;
+  text-align: center;
+}
+
+.icons {
+  display: flex;
+  justify-content: space-around;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+label {
+  font-size: 20px;
+}
+
+button:hover {
+  opacity: 0.6;
+}
+
 td {
   border: 2px solid #333;
   height: 100px;
@@ -49,14 +78,32 @@ table tr td:last-child {
   font-size: 2em;
 }
 
+.move {
+  animation: move 1.6s forwards;
+}
+
+.reset {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 10px;
+}
+
+.settings-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+}
+
 .settings {
   display: none;
-  width: 200px;
-  top: 120px;
+  width: 300px;
+  top: 100px;
   background-color: rgba(205, 133, 63, 0.8);
   position: absolute;
   left: 50%;
-  margin-left: -100px;
+  margin-left: -150px;
   padding-top: 50px;
   padding-bottom: 50px;
   text-align: center;
@@ -65,8 +112,69 @@ table tr td:last-child {
   font-size: 2em;
 }
 
+.exit-settings {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+#easy {
+  background-color: green;
+}
+
+#moderate {
+  background-color: yellow;
+}
+
+#hard {
+  background-color: orange;
+}
+
+#impossible {
+  background-color: red;
+}
+
+.close-settings {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+}
+
 .warning {
   text-align: center;
   padding: 10px;
-  color: red;
+  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-fill-color: red;
+  font-weight: bolder;
+  font-size: 15px;
+  height: 15px;
+}
+
+/* .warning.hide {
+  animation: disappear 5s forwards;
+} */
+
+@keyframes move {
+  0% {
+    transform: scale(2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }

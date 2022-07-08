@@ -1,6 +1,6 @@
 let origBoard;
-const humanPlayer = 'O';
-const aiPlayer = 'X';
+let humanPlayer = localStorage.getItem('playerName');
+let aiPlayer = localStorage.getItem('aiName');
 const winCombos = [
   //top to bottom
   [0, 1, 2],
@@ -15,38 +15,73 @@ const winCombos = [
   [6, 4, 2]
 ]
 
-let difficulty = 'easy';
+let difficulty = (localStorage.getItem('difficulty') !== null) ? localStorage.getItem('difficulty') : 'easy';
 let emptySpots = undefined;
 
+const warning = document.querySelector('.warning');
 const cells = document.querySelectorAll('.cell');
 const levels = document.querySelectorAll('.level');
+const aiName = document.querySelector('#aiName');
+const playerName = document.querySelector('#playerName');
+aiName.value = aiPlayer;
+playerName.value = humanPlayer;
+
+aiName.addEventListener('change', handleAiName, false);
+playerName.addEventListener('change', handlePlayerName, false);
 
 startGame();
 
-function startGame() {
+function replay() {
+  let replay = 'replay';
+  startGame(replay);
+}
+
+function startGame(replay) {
+  if ((aiPlayer === null) || (humanPlayer === null) || (aiPlayer === '') || (humanPlayer === '') || (aiPlayer === ' ') || (humanPlayer === ' ')) {
+    aiPlayer = 'X';
+    aiName.value = 'X';
+    humanPlayer = 'O';
+    playerName.value = 'O';
+  }
   document.querySelector('.endgame').style.display = 'none';
   document.querySelector('.difficulty').innerText = difficulty;
-  origBoard = Array.from(Array(9).keys());
-  console.log(origBoard);
-  for (let i = 0; i < cells.length; i++) {
-    cells[i].innerText = '';
-    cells[i].style.removeProperty('background-color');
-    cells[i].addEventListener('click', turnClick, false);
+  if (localStorage.getItem('savedGame') === null || replay !== undefined) {
+    origBoard = Array.from(Array(9).keys());
+    for (let i = 0; i < cells.length; i++) {
+      cells[i].innerText = '';
+      cells[i].style.removeProperty('background-color');
+      cells[i].addEventListener('click', turnClick, false);
+    }
+  } else {
+    origBoard = JSON.parse(localStorage.getItem('savedGame'));
+    for (let i = 0; i < cells.length; i++) {
+      for (let i = 0; i < origBoard.length; i++) {
+        cells[i].innerText = (origBoard[i] === aiPlayer || origBoard[i] === humanPlayer) ? origBoard[i] : '';
+        cells[i].style.removeProperty('background-color');
+        cells[i].addEventListener('click', turnClick, false);
+      }
+    }
   }
 }
 
 function turnClick(square) {
-  if (typeof origBoard[square.target.id] == 'number') {
+  humanMoves = origBoard.filter(elem => elem === humanPlayer);
+  aiMoves = origBoard.filter(elem => elem === aiPlayer);
+  if (typeof origBoard[square.target.id] == 'number' && humanMoves.length === aiMoves.length) {
     turn(square.target.id, humanPlayer);
 
     if (!checkWin(origBoard, humanPlayer) && !checkTie()) {
-      turn(bestSpot(), aiPlayer);
+      setTimeout(() => {
+        turn(bestSpot(), aiPlayer);
+      }, 1300);
     }
   }
 }
 
 function turn(squareId, player) {
   origBoard[squareId] = player;
+  localStorage.setItem('savedGame', JSON.stringify(origBoard));
+  document.getElementById(squareId).classList.add('move');
   document.getElementById(squareId).innerText = player;
   let gameWon = checkWin(origBoard, player);
   if (gameWon) gameOver(gameWon);
@@ -88,7 +123,20 @@ function gameOver(gameWon) {
   declareWinner(gameWon.player + ' wins');
 }
 
+function checkTie() {
+  if (emptySquares().length === 0) {
+    for (let i = 0; i < cells.length; i++) {
+      cells[i].style.backgroundColor = 'green';
+      cells[i].removeEventListener('click', turnClick, false);
+    }
+    declareWinner('Tie Game!');
+    return true;
+  }
+  return false;
+}
+
 function declareWinner(who) {
+  localStorage.removeItem('savedGame');
   document.querySelector('.endgame').style.display = 'block';
   document.querySelector('.endgame-text').innerText = who;
 }
@@ -114,44 +162,68 @@ function changeDifficulty(e) {
   if (emptySquares().length === 9) {
     difficulty = e.target.id;
     document.querySelector('.difficulty').innerText = difficulty;
-    closeSettings();
+    localStorage.setItem('difficulty', difficulty);
   } else {
-    document.querySelector('.warning').innerText = 'currently in a game!'
+    warning.innerText = `can't change difficulty during a game!`
+    // warning.classList.add('hide');
+  }
+}
+
+function handleAiName(e) {
+  if (emptySquares().length === 9) {
+    if (e.target.value !== humanPlayer) {
+      aiPlayer = e.target.value
+      localStorage.setItem('aiName', e.target.value);
+    } else {
+      warning.innerText = `icons cannot be the same`
+      aiPlayer = 'X';
+      aiName.value = 'X';
+    }
+  } else {
+    warning.innerText = 'cannot change icon during a game';
+    aiName.value = aiPlayer;
+  }
+}
+
+function handlePlayerName(e) {
+  if (emptySquares().length === 9) {
+    if (e.target.value !== aiPlayer) {
+      humanPlayer = e.target.value;
+      localStorage.setItem('playerName', e.target.value);
+    } else {
+      warning.innerText = `icons cannot be the same`
+      humanPlayer = 'O';
+      playerName.value = 'O';
+    }
+  } else {
+    warning.innerText = 'cannot change icon during a game'
+    playerName.value = humanPlayer;
   }
 }
 
 function bestSpot() {
   let aiPlays = origBoard.filter(element => element === aiPlayer).length
-  console.log(aiPlays);
+
   if (difficulty === 'easy') {
     return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
-  } else if (difficulty === 'moderate') {
+  }
+  else if (difficulty === 'moderate') {
     if (aiPlays < 2) {
       return minimax(origBoard, aiPlayer).index
     } else {
       return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
     }
-  } else if (difficulty === 'hard') {
+  }
+  else if (difficulty === 'hard') {
     if (aiPlays < 3) {
       return minimax(origBoard, aiPlayer).index
     } else {
       return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
     }
-  } else if (difficulty === 'impossible') {
+  }
+  else if (difficulty === 'impossible') {
     return minimax(origBoard, aiPlayer).index
   }
-}
-
-function checkTie() {
-  if (emptySquares().length === 0) {
-    for (let i = 0; i < cells.length; i++) {
-      cells[i].style.backgroundColor = 'green';
-      cells[i].removeEventListener('click', turnClick, false);
-    }
-    declareWinner('Tie Game!');
-    return true;
-  }
-  return false;
 }
 
 //straight from youtube
@@ -171,6 +243,9 @@ function minimax(newBoard, player) {
     move.index = newBoard[availSpots[i]];
     newBoard[availSpots[i]] = player;
 
+    /**this will call minimax again and again alternating between players 
+     * when each player takes there move, it will add its score to the moves array
+    */
     if (player == aiPlayer) {
       let result = minimax(newBoard, humanPlayer);
       move.score = result.score;
@@ -187,6 +262,7 @@ function minimax(newBoard, player) {
   let bestMove;
   if (player === aiPlayer) {
     let bestScore = -10000;
+    //this will pick the first highest score
     for (let i = 0; i < moves.length; i++) {
       if (moves[i].score > bestScore) {
         bestScore = moves[i].score;
@@ -195,6 +271,7 @@ function minimax(newBoard, player) {
     }
   } else {
     let bestScore = 10000;
+    //this will pick the lowest score
     for (let i = 0; i < moves.length; i++) {
       if (moves[i].score < bestScore) {
         bestScore = moves[i].score;
