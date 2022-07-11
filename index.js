@@ -59,13 +59,6 @@ let ticTacToe = (function () {
       humanPlayer = 'O';
       playerName.value = 'O';
     }
-    if (localMultiplayer === true) {
-      document.querySelector('.secondPlayer-settings').classList.add('display');
-      document.querySelector('.single-player').classList.add('display');
-    } else {
-      document.querySelector('.ai-settings').classList.add('display');
-      document.querySelector('.pass-and-play').classList.add('display');
-    }
     document.querySelector('.endgame').style.display = 'none';
     document.querySelector('.difficulty').innerText = difficulty;
     if (localStorage.getItem('savedGame') === null || replay !== undefined) {
@@ -94,17 +87,16 @@ let ticTacToe = (function () {
     let humanMoves = origBoard.filter(elem => elem === humanPlayer),
       aiMoves = origBoard.filter(elem => elem === aiPlayer),
       p2Moves = origBoard.filter(elem => elem === secondPlayer);
-    console.log(p2Moves, humanMoves);
-
-    if (typeof origBoard[square.target.id] == 'number' && (humanMoves.length === aiMoves.length || humanMoves.length === p2Moves.length)) {
+    //first player turn
+    if (typeof origBoard[square.target.id] == 'number' && (humanMoves.length <= aiMoves.length || humanMoves.length <= p2Moves.length)) {
       turn(square.target.id, humanPlayer);
-
-      if (passAndPlay === false && !checkWin(origBoard, humanPlayer) && !checkTie()) {
-        setTimeout(() => {
-          turn(bestSpot(), aiPlayer);
-        }, 1300);
-      }
-    } else if (!checkWin(origBoard, humanPlayer) && !checkTie() && humanMoves !== p2Moves && typeof origBoard[square.target.id] == 'number') {
+    }
+    //ai turn
+    if (!checkWin(origBoard, humanPlayer) && !checkTie() && localMultiplayer === false && (aiMoves <= humanMoves) && !(aiMoves > humanMoves)) {
+      turn(bestSpot(), aiPlayer);
+    }
+    //second player turn
+    if (!checkWin(origBoard, humanPlayer) && !checkTie() && (humanMoves > p2Moves) && typeof origBoard[square.target.id] == 'number' && localMultiplayer === true) {
       turn(square.target.id, secondPlayer);
     }
   }
@@ -130,7 +122,6 @@ let ticTacToe = (function () {
     let plays = board.reduce((a, e, i) =>
       //if element equals player then concat index
       (e === player) ? a.concat(i) : a, []);
-
     let gameWon = null;
     //win is the the 3 values in array
     for (let [index, win] of winCombos.entries()) {
@@ -185,6 +176,13 @@ let ticTacToe = (function () {
     document.querySelector('.settings').style.display = 'block';
     for (let i = 0; i < levels.length; i++) {
       levels[i].addEventListener('click', changeDifficulty, false);
+    }
+    if (localMultiplayer === true) {
+      document.querySelector('.secondPlayer-settings').classList.add('display');
+      document.querySelector('.single-player').classList.add('display');
+    } else {
+      document.querySelector('.ai-settings').classList.add('display');
+      document.querySelector('.pass-and-play').classList.add('display');
     }
   }
 
@@ -259,6 +257,7 @@ let ticTacToe = (function () {
     document.querySelector('.single-player').classList.add('display');
     document.querySelector('.ai-settings').classList.remove('display');
     document.querySelector('.pass-and-play').classList.remove('display');
+    replay();
   }
 
   function singlePlayer() {
@@ -268,6 +267,7 @@ let ticTacToe = (function () {
     document.querySelector('.single-player').classList.remove('display');
     document.querySelector('.ai-settings').classList.add('display');
     document.querySelector('.pass-and-play').classList.add('display');
+    replay();
   }
 
   /**---------------------------------------------------AI logic----------------------------------------------------------------------*/
