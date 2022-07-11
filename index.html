@@ -28,11 +28,11 @@
   </table>
   <div class="endgame">
     <div class="endgame-text"></div>
-    <button onclick="replay()" class="endgame-reset">Replay</button>
+    <button onclick="ticTacToe.replay()" class="endgame-reset">Replay</button>
   </div>
-  <button onclick="openSettings()" class="settings-button">Settings</button>
+  <button onclick="ticTacToe.openSettings()" class="settings-button">Settings</button>
   <div class="settings">
-    <div onclick="closeSettings()" class="exit-settings">X</div>
+    <div onclick="ticTacToe.closeSettings()" class="exit-settings">X</div>
     <div>Difficulty: <span class="difficulty"></span></div>
     <div class="difficulty-levels">
       <button class="level" id="easy">Easy</button>
@@ -43,16 +43,22 @@
     <div class="warning"></div>
     <form class="icons">
       <div>
-        <label for="playerName">Player Icon</label>
+        <label for="playerName">P1</label>
         <input type="text" id="playerName" name="playerName" maxlength="1" />
       </div>
-      <div>
-        <label for="aiName">AI Icon</label>
+      <div class="ai-settings">
+        <label for="aiName">AI</label>
         <input type="text" id="aiName" name="aiName" maxlength="1" />
       </div>
+      <div class="secondPlayer-settings">
+        <label for="secondPlayer">P2</label>
+        <input type="text" id="secondPlayer" name="secondPlayer" maxlength="1" />
+      </div>
     </form>
-    <button onclick="replay(); closeSettings()" class="reset">Replay</button>
-    <button onclick="closeSettings()" class="close-settings">Close</button>
+    <button onclick="ticTacToe.passAndPlay()" class="pass-and-play">Pass And Play</button>
+    <button onclick="ticTacToe.singlePlayer()" class="single-player">Single Player</button>
+    <button onclick="ticTacToe.replay()" class="reset">Reset Game</button>
+    <button onclick="ticTacToe.closeSettings()" class="close-settings">Close</button>
   </div>
   <script src="index.js"></script>
 </body>

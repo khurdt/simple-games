@@ -155,6 +155,40 @@ table tr td:last-child {
   height: 15px;
 }
 
+.ai-settings {
+  display: none;
+}
+
+.pass-and-play {
+  display: none;
+}
+
+.secondPlayer-settings {
+  display: none;
+}
+
+.single-player {
+  display: none;
+}
+
+.ai-settings.display {
+  display: block;
+}
+
+.pass-and-play.display {
+  margin: auto;
+  display: block;
+}
+
+.secondPlayer-settings.display {
+  display: block;
+}
+
+.single-player.display {
+  margin: auto;
+  display: block;
+}
+
 /* .warning.hide {
   animation: disappear 5s forwards;
 } */
