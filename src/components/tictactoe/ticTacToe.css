@@ -19,16 +19,22 @@ input {
     margin-bottom: 10px;
 }
 
-label {
-    font-size: 20px;
+.square {
+    width: 100px;
+    color: white;
 }
 
-button:hover {
-    opacity: 0.6;
+.clicked {
+    animation: move 1.6s forwards;
 }
 
-td {
+.notClicked {
+    opacity: 0;
+}
+
+td.cell {
     border: 2px solid white;
+    color: white;
     height: 100px;
     width: 100px;
     text-align: center;
@@ -38,27 +44,25 @@ td {
     cursor: pointer;
 }
 
-table {
+table.table {
     border-collapse: collapse;
-    position: absolute;
-    left: 50%;
-    margin-left: -155px;
-    top: 150px;
+    width: 400px;
+    height: 400px;
 }
 
-table tr:first-child td {
+table tr.tr:first-child td.cell {
     border-top: 0;
 }
 
-table tr:last-child td {
+table tr:last-child td.cell {
     border-bottom: 0;
 }
 
-table tr td:first-child {
+table tr td.cell:first-child {
     border-left: 0;
 }
 
-table tr td:last-child {
+table tr td.cell:last-child {
     border-right: 0;
 }
 
@@ -78,125 +82,6 @@ table tr td:last-child {
     font-size: 2em;
 }
 
-.move {
-    animation: move 1.6s forwards;
-}
-
-.reset {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    margin: 10px;
-}
-
-.settings-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 10px;
-}
-
-.settings {
-    display: none;
-    width: 300px;
-    top: 100px;
-    background-color: rgba(205, 133, 63, 0.8);
-    position: absolute;
-    left: 50%;
-    margin-left: -150px;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    text-align: center;
-    border-radius: 5px;
-    color: white;
-    font-size: 2em;
-}
-
-.exit-settings {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 10px;
-    cursor: pointer;
-    font-size: 20px;
-}
-
-#easy {
-    background-color: green;
-}
-
-#moderate {
-    background-color: yellow;
-}
-
-#hard {
-    background-color: orange;
-}
-
-#impossible {
-    background-color: red;
-}
-
-.close-settings {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin: 10px;
-}
-
-.warning {
-    text-align: center;
-    padding: 10px;
-    -webkit-text-stroke-color: black;
-    -webkit-text-stroke-width: 0.5px;
-    -webkit-text-fill-color: red;
-    font-weight: bolder;
-    font-size: 15px;
-    height: 15px;
-}
-
-.ai-settings {
-    display: none;
-}
-
-.pass-and-play {
-    display: none;
-}
-
-.secondPlayer-settings {
-    display: none;
-}
-
-.single-player {
-    display: none;
-}
-
-.ai-settings.display {
-    display: block;
-}
-
-.pass-and-play.display {
-    margin: auto;
-    display: block;
-}
-
-.secondPlayer-settings.display {
-    display: block;
-}
-
-.single-player.display {
-    margin: auto;
-    display: block;
-}
-
-
-.difficulty-buttons {
-    width: 110px;
-}
-
-/* .warning.hide {
-    animation: disappear 5s forwards;
-  } */
 
 @keyframes move {
     0% {

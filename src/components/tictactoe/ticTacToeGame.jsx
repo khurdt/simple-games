@@ -12,6 +12,13 @@ export default function TicTacToeGame(props) {
             Array.from(Array(9).keys()) :
             JSON.parse(localStorage.getItem('savedGame'))
     );
+    const [players, setPlayers] = useState([]);
+    const [tieGame, setTieGame] = useState(false);
+    const [gameWon, setGameWon] = useState({
+        player: '',
+        index: []
+    })
+    const [winner, setWinner] = useState('');
     // const cells = useRef();
     const winCombos = [
         //top to bottom
@@ -29,48 +36,31 @@ export default function TicTacToeGame(props) {
     let emptySpots;
 
     useEffect(() => {
-        if (inGame === true) {
-            startGame();
+        if (localMultiplayer) {
+            setPlayers([firstPlayer, secondPlayer])
+        } else {
+            setPlayers([firstPlayer, aiPlayer])
         }
     }, [inGame, origBoard])
-
-    const startGame = () => {
-        console.log(origBoard);
-        // cells.current = cells.current.slice(0, origBoard.length);
-
-        // for (let i = 0; i < cells.length; i++) {
-        //     cells[i].innerText = '';
-        //     cells[i].style.removeProperty('background-color');
-        //     cells[i].addEventListener('click', turnClick, false);
-        // }
-
-        // for (let i = 0; i < cells.length; i++) {
-        //     for (let i = 0; i < origBoard.length; i++) {
-        //         cells[i].innerText = (origBoard[i] === aiPlayer || origBoard[i] === firstPlayer) ? origBoard[i] : '';
-        //         cells[i].style.removeProperty('background-color');
-        //         cells[i].addEventListener('click', turnClick, false);
-        //     }
-        // }
-    }
 
     /**---------------------------------------------------Turns----------------------------------------------------------------------*/
 
     const turnClick = (item, i) => {
         //make sure no one takes more turns than they ought
-        let humanMoves = origBoard.filter(elem => elem === firstPlayer),
+        let p1Moves = origBoard.filter(elem => elem === firstPlayer),
             aiMoves = origBoard.filter(elem => elem === aiPlayer),
             p2Moves = origBoard.filter(elem => elem === secondPlayer);
         if (typeof origBoard[i] == 'number') {
             //first player turn
-            if ((humanMoves.length <= aiMoves.length || humanMoves.length <= p2Moves.length)) {
+            if ((p1Moves.length <= aiMoves.length || p1Moves.length <= p2Moves.length)) {
                 turn(item, firstPlayer);
             }
             //ai turn
-            if (!checkWin(origBoard, firstPlayer) && !checkTie() && localMultiplayer === false && (aiMoves <= humanMoves)) {
+            if (!checkWin(origBoard, firstPlayer) && localMultiplayer === false && (aiMoves.length <= p1Moves.length)) {
                 turn(bestSpot(), aiPlayer);
             }
             //second player turn
-            if (!checkWin(origBoard, firstPlayer) && !checkTie() && (humanMoves > p2Moves) && localMultiplayer === true) {
+            if (!checkWin(origBoard, firstPlayer) && (p2Moves.length < p1Moves.length) && localMultiplayer === true) {
                 turn(item, secondPlayer);
             }
         }
@@ -98,7 +88,7 @@ export default function TicTacToeGame(props) {
         let plays = board.reduce((a, e, i) =>
             //if element equals player then concat index
             (e === player) ? a.concat(i) : a, []);
-        let gameWon = null;
+        let gameWon = null
         //win is the the 3 values in array
         for (let [index, win] of winCombos.entries()) {
             //has a player played in every spot of a certain array, if so, then elem will equal true;
@@ -114,21 +104,15 @@ export default function TicTacToeGame(props) {
     }
 
     const gameOver = (gameWon) => {
-        // for (let index of winCombos[gameWon.index]) {
-        //     document.getElementById(index).style.backgroundColor = gameWon.player === firstPlayer ? 'blue' : 'red';
-        // }
-        // for (let i = 0; i < cells.length; i++) {
-        //     cells[i].removeEventListener('click', turnClick, false);
-        // }
-        declareWinner(gameWon.player + ' wins');
+        let player = gameWon.player
+        setWinner((player === aiPlayer ? 'red' : player === firstPlayer ? 'blue' : 'purple'));
+        setGameWon(gameWon);
+        declareWinner(player + ' wins');
     }
 
     const checkTie = () => {
         if (emptySquares().length === 0) {
-            // for (let i = 0; i < cells.length; i++) {
-            //     cells[i].style.backgroundColor = 'green';
-            //     cells[i].removeEventListener('click', turnClick, false);
-            // }
+            setTieGame(true);
             declareWinner('Tie Game!');
             return true;
         }
@@ -150,17 +134,21 @@ export default function TicTacToeGame(props) {
         let aiPlays = origBoard.filter(element => element === aiPlayer).length
 
         if (difficulty === 'easy') {
-            return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
+            if (aiPlays === 1 || aiPlays > 4) {
+                return minimax(origBoard, aiPlayer).index
+            } else {
+                return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
+            }
         }
         else if (difficulty === 'moderate') {
-            if (aiPlays < 2) {
+            if (aiPlays === 1 || aiPlays > 3) {
                 return minimax(origBoard, aiPlayer).index
             } else {
                 return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
             }
         }
         else if (difficulty === 'hard') {
-            if (aiPlays < 3) {
+            if (aiPlays === 1 || aiPlays > 2) {
                 return minimax(origBoard, aiPlayer).index
             } else {
                 return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
@@ -236,43 +224,61 @@ export default function TicTacToeGame(props) {
                     <Button type='button' onClick={() => { setInGame(false) }}>Return</Button>
                 </Col>
             </Row>
-            <Row>
-                {origBoard.map((item, i) => {
-                    return (
-                        <div>
-                            <div
-                                key={i}
-                                onClick={() => { turnClick(item, i) }}
-                                style={{ width: `100px`, border: '1px solid blue', color: 'white' }}>
-                                {item}
-                            </div>
-                        </div>
-                    )
-                })}
+            <Row className='justify-content-md-center'>
+                <table className='table'>
+                    <tbody>
+                        <tr className='tr'>
+                            {origBoard.map((item, i) => {
+                                if (i < 3) {
+                                    return (
+                                        <td
+                                            key={i}
+                                            onClick={() => { turnClick(item, i) }}
+                                            style={(gameWon.player === item && gameWon.index === i) ? { backgroundColor: winner } : {}}
+                                            className='cell'>
+                                            <div className={(players.includes(item)) ? 'clicked' : 'notClicked'}>{item}</div>
+                                        </td>
+                                    )
+                                }
+                            })}
+                        </tr>
+                        <tr className='tr'>
+                            {origBoard.map((item, i) => {
+                                if (i >= 3 && i < 6) {
+                                    return (
+                                        <td
+                                            key={i}
+                                            onClick={() => { turnClick(item, i) }}
+                                            style={(gameWon.player === item && gameWon.index === i) ? { backgroundColor: winner } : {}}
+                                            className='cell'>
+                                            <div className={(players.includes(item)) ? 'clicked' : 'notClicked'}>{item}</div>
+                                        </td>
+                                    )
+                                }
+                            })}
+                        </tr>
+                        <tr className='tr'>
+                            {origBoard.map((item, i) => {
+                                if (i >= 6) {
+                                    return (
+                                        <td
+                                            key={i}
+                                            onClick={() => { turnClick(item, i) }}
+                                            style={(gameWon.player === item && gameWon.index === i) ? { backgroundColor: winner } : {}}
+                                            className='cell'>
+                                            <div className={(players.includes(item)) ? 'clicked' : 'notClicked'}>{item}</div>
+                                        </td>
+                                    )
+                                }
+                            })}
+                        </tr>
+                    </tbody>
+                </table>
             </Row>
-            {/* <table>
-                <tbody>
-                    <tr>
-                        <td className="cell" ref={cells} id="0"></td>
-                        <td className="cell" ref={cells} id="1"></td>
-                        <td className="cell" ref={cells} id="2"></td>
-                    </tr>
-                    <tr>
-                        <td className="cell" ref={cells} id="3"></td>
-                        <td className="cell" ref={cells} id="4"></td>
-                        <td className="cell" ref={cells} id="5"></td>
-                    </tr>
-                    <tr>
-                        <td className="cell" ref={cells} id="6"></td>
-                        <td className="cell" ref={cells} id="7"></td>
-                        <td className="cell" ref={cells} id="8"></td>
-                    </tr>
-                </tbody>
-            </table> */}
-            <div className="endgame">
+            {/* <div className="endgame">
                 <div className="endgame-text"></div>
                 <button className="endgame-reset">Replay</button>
-            </div>
+            </div> */}
         </div>
     );
 
