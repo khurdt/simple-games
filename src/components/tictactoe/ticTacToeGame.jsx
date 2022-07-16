@@ -1,12 +1,18 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { useRef, useState } from 'react';
+import { Row, Col, Button } from 'react-bootstrap';
 
 export default function TicTacToeGame(props) {
     const { difficulty, localMultiplayer, firstPlayer, secondPlayer, aiPlayer, resumeGame, inGame, setInGame, setResumeGame } = props;
     const [endgame, setEndGame] = useState(true);
-    const [origBoard, setOrigBoard] = useState(true);
-    const cells = useRef();
+    const [refresh, setRefresh] = useState(false);
+    const [origBoard, setOrigBoard] = useState(
+        (localStorage.getItem('savedGame') === null || resumeGame === false) ?
+            Array.from(Array(9).keys()) :
+            JSON.parse(localStorage.getItem('savedGame'))
+    );
+    // const cells = useRef();
     const winCombos = [
         //top to bottom
         [0, 1, 2],
@@ -26,39 +32,38 @@ export default function TicTacToeGame(props) {
         if (inGame === true) {
             startGame();
         }
-    }, [inGame])
+    }, [inGame, origBoard])
 
     const startGame = () => {
-        if (localStorage.getItem('savedGame') === null || resumeGame === true) {
-            setOrigBoard(Array.from(Array(9).keys()));
-            for (let i = 0; i < cells.length; i++) {
-                cells[i].innerText = '';
-                cells[i].style.removeProperty('background-color');
-                cells[i].addEventListener('click', turnClick, false);
-            }
-        } else {
-            setOrigBoard = JSON.parse(localStorage.getItem('savedGame'));
-            for (let i = 0; i < cells.length; i++) {
-                for (let i = 0; i < origBoard.length; i++) {
-                    cells[i].innerText = (origBoard[i] === aiPlayer || origBoard[i] === firstPlayer) ? origBoard[i] : '';
-                    cells[i].style.removeProperty('background-color');
-                    cells[i].addEventListener('click', turnClick, false);
-                }
-            }
-        }
+        console.log(origBoard);
+        // cells.current = cells.current.slice(0, origBoard.length);
+
+        // for (let i = 0; i < cells.length; i++) {
+        //     cells[i].innerText = '';
+        //     cells[i].style.removeProperty('background-color');
+        //     cells[i].addEventListener('click', turnClick, false);
+        // }
+
+        // for (let i = 0; i < cells.length; i++) {
+        //     for (let i = 0; i < origBoard.length; i++) {
+        //         cells[i].innerText = (origBoard[i] === aiPlayer || origBoard[i] === firstPlayer) ? origBoard[i] : '';
+        //         cells[i].style.removeProperty('background-color');
+        //         cells[i].addEventListener('click', turnClick, false);
+        //     }
+        // }
     }
 
     /**---------------------------------------------------Turns----------------------------------------------------------------------*/
 
-    const turnClick = (square) => {
+    const turnClick = (item, i) => {
         //make sure no one takes more turns than they ought
         let humanMoves = origBoard.filter(elem => elem === firstPlayer),
             aiMoves = origBoard.filter(elem => elem === aiPlayer),
             p2Moves = origBoard.filter(elem => elem === secondPlayer);
-        if (typeof origBoard[square.target.id] == 'number') {
+        if (typeof origBoard[i] == 'number') {
             //first player turn
             if ((humanMoves.length <= aiMoves.length || humanMoves.length <= p2Moves.length)) {
-                turn(square.target.id, firstPlayer);
+                turn(item, firstPlayer);
             }
             //ai turn
             if (!checkWin(origBoard, firstPlayer) && !checkTie() && localMultiplayer === false && (aiMoves <= humanMoves)) {
@@ -66,16 +71,17 @@ export default function TicTacToeGame(props) {
             }
             //second player turn
             if (!checkWin(origBoard, firstPlayer) && !checkTie() && (humanMoves > p2Moves) && localMultiplayer === true) {
-                turn(square.target.id, secondPlayer);
+                turn(item, secondPlayer);
             }
         }
     }
 
     const turn = (squareId, player) => {
         origBoard[squareId] = player;
+        setRefresh(!refresh);
         localStorage.setItem('savedGame', JSON.stringify(origBoard));
-        document.getElementById(squareId).classList.add('move');
-        document.getElementById(squareId).innerText = player;
+        // document.getElementById(squareId).classList.add('move');
+        // document.getElementById(squareId).innerText = player;
         let gameWon = checkWin(origBoard, player);
         if (gameWon) gameOver(gameWon);
     }
@@ -108,21 +114,21 @@ export default function TicTacToeGame(props) {
     }
 
     const gameOver = (gameWon) => {
-        for (let index of winCombos[gameWon.index]) {
-            document.getElementById(index).style.backgroundColor = gameWon.player === firstPlayer ? 'blue' : 'red';
-        }
-        for (let i = 0; i < cells.length; i++) {
-            cells[i].removeEventListener('click', turnClick, false);
-        }
+        // for (let index of winCombos[gameWon.index]) {
+        //     document.getElementById(index).style.backgroundColor = gameWon.player === firstPlayer ? 'blue' : 'red';
+        // }
+        // for (let i = 0; i < cells.length; i++) {
+        //     cells[i].removeEventListener('click', turnClick, false);
+        // }
         declareWinner(gameWon.player + ' wins');
     }
 
     const checkTie = () => {
         if (emptySquares().length === 0) {
-            for (let i = 0; i < cells.length; i++) {
-                cells[i].style.backgroundColor = 'green';
-                cells[i].removeEventListener('click', turnClick, false);
-            }
+            // for (let i = 0; i < cells.length; i++) {
+            //     cells[i].style.backgroundColor = 'green';
+            //     cells[i].removeEventListener('click', turnClick, false);
+            // }
             declareWinner('Tie Game!');
             return true;
         }
@@ -131,8 +137,8 @@ export default function TicTacToeGame(props) {
 
     const declareWinner = (who) => {
         localStorage.removeItem('savedGame');
-        document.querySelector('.endgame').style.display = 'block';
-        document.querySelector('.endgame-text').innerText = who;
+        // document.querySelector('.endgame').style.display = 'block';
+        // document.querySelector('.endgame-text').innerText = who;
     }
 
     const emptySquares = () => {
@@ -221,10 +227,30 @@ export default function TicTacToeGame(props) {
 
         return moves[bestMove];
     }
+    // you can access the elements with itemsRef.current[n]
 
     return (
         <div>
-            <table>
+            <Row>
+                <Col className='m-3'>
+                    <Button type='button' onClick={() => { setInGame(false) }}>Return</Button>
+                </Col>
+            </Row>
+            <Row>
+                {origBoard.map((item, i) => {
+                    return (
+                        <div>
+                            <div
+                                key={i}
+                                onClick={() => { turnClick(item, i) }}
+                                style={{ width: `100px`, border: '1px solid blue', color: 'white' }}>
+                                {item}
+                            </div>
+                        </div>
+                    )
+                })}
+            </Row>
+            {/* <table>
                 <tbody>
                     <tr>
                         <td className="cell" ref={cells} id="0"></td>
@@ -242,7 +268,7 @@ export default function TicTacToeGame(props) {
                         <td className="cell" ref={cells} id="8"></td>
                     </tr>
                 </tbody>
-            </table>
+            </table> */}
             <div className="endgame">
                 <div className="endgame-text"></div>
                 <button className="endgame-reset">Replay</button>

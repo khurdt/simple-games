@@ -30,26 +30,26 @@ export default function TicTacToeIntro(props) {
         setResumeGame(false);
     }
 
-    const handleAiName = (e) => {
-        if (e.target.value !== firstPlayer) {
-            setAiPlayer(e.target.value);
-            localStorage.setItem('aiName', e.target.value);
+    const handleAiName = (name) => {
+        if (name !== firstPlayer) {
+            setAiPlayer(name);
+            localStorage.setItem('aiName', name);
             setResumeGame(false);
         }
     }
 
-    const handlePlayerName = (e) => {
-        if (e.target.value !== aiPlayer) {
-            setFirstPlayer(e.target.value);
-            localStorage.setItem('playerName', e.target.value);
+    const handlePlayerName = (name) => {
+        if (name !== aiPlayer) {
+            setFirstPlayer(name);
+            localStorage.setItem('playerName', name);
             setResumeGame(false);
         }
     }
 
-    const handleSecondPlayerName = (e) => {
-        if (e.target.value !== firstPlayer) {
-            setSecondPlayer(e.target.value);
-            localStorage.setItem('secondPlayerName', e.target.value);
+    const handleSecondPlayerName = (name) => {
+        if (name !== firstPlayer) {
+            setSecondPlayer(name);
+            localStorage.setItem('secondPlayerName', name);
             setResumeGame(false);
         }
     }
@@ -82,68 +82,77 @@ export default function TicTacToeIntro(props) {
                 :
                 <div>
                     <Row>
-                        <Col>
+                        <Col className='m-3'>
                             <Button type='button' onClick={() => { onBackClick() }}>Return</Button>
                         </Col>
                     </Row>
-                    <Card className='m-auto' style={{ maxWidth: '500px', backgroundColor: '#1E2127', color: 'white' }}>
-                        <Card.Title style={{ fontSize: '30px' }} className='m-3'>Personal Info</Card.Title>
-                        <Row>
-                            <Col className='m-3' xs={10} md={4}>
-                                <Form>
-                                    <Form.Group className='m-1'>
-                                        <Form.Label>P1:</Form.Label>
-                                        <Form.Control
-                                            style={{ backgroundColor: '#1E2127', color: 'white' }}
-                                            type='text'
-                                            value={firstPlayer}
-                                            onChange={(e) => handlePlayerName(e.target.value)} required />
-                                        {/* {usernameErr && <p style={{ color: 'red', padding: '1px' }}>{usernameErr}</p>} */}
-                                    </Form.Group>
-                                    {localMultiplayer ?
-                                        <Form.Group className='m-1'>
-                                            <Form.Label>P2:</Form.Label>
+                    <div style={{ marginRight: '10px', marginLeft: '10px' }}>
+                        <Card className='m-auto' style={{ maxWidth: '500px', backgroundColor: '#1E2127', color: 'white' }}>
+                            <Card.Title className='m-2' style={{ fontSize: '30px' }} >
+                                Tic Tac Toe:
+                            </Card.Title>
+                            <Row className='m-auto'>
+                                <Col> <Button onClick={singlePlayer} style={(!localMultiplayer) ? { borderColor: 'red', width: '130px' } : { width: '130px' }}>Single Player</Button></Col>
+                                <Col><Button onClick={passAndPlay} style={(localMultiplayer) ? { borderColor: 'red', width: '130px' } : { width: '130px' }}>Pass And Play</Button></Col>
+                            </Row>
+                            <Row className='m-auto'>
+                                <Col>
+                                    <Form style={{ display: 'flex', margin: 'auto' }}>
+                                        <Form.Group className='m-2' style={{ width: '100px' }} >
+                                            <Form.Label>P1:</Form.Label>
                                             <Form.Control
                                                 style={{ backgroundColor: '#1E2127', color: 'white' }}
                                                 type='text'
-                                                value={secondPlayer}
-                                                onChange={(e) => handleSecondPlayerName(e.target.value)} required />
-                                            {/* {passwordErr && <p style={{ color: 'red', padding: '1px' }}>{passwordErr}</p>} */}
-                                        </Form.Group> :
-                                        <Form.Group className='m-1'>
-                                            <Form.Label>AI:</Form.Label>
-                                            <Form.Control
-                                                style={{ backgroundColor: '#1E2127', color: 'white' }}
-                                                type='text'
-                                                value={aiPlayer}
-                                                onChange={(e) => handleAiName(e.target.value)} required />
-                                            {/* {emailErr && <p style={{ color: 'red', padding: '1px' }}>{emailErr}</p>} */}
+                                                value={firstPlayer}
+                                                onChange={(e) => handlePlayerName(e.target.value)} required />
+                                            {/* {usernameErr && <p style={{ color: 'red', padding: '1px' }}>{usernameErr}</p>} */}
                                         </Form.Group>
-                                    }
-                                    {localMultiplayer ?
-                                        <Button onClick={singlePlayer} className="m-3" variant='primary'>Single Player</Button> :
-                                        <Button onClick={passAndPlay} className="m-3" variant='primary'>Pass And Play</Button>
-                                    }
-                                </Form>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Button className="m-3" style={{ width: '110px' }} onClick={() => changeDifficulty('easy')}>easy</Button>
-                                <Button className="m-3" style={{ width: '110px' }} onClick={() => changeDifficulty('moderate')}>moderate</Button>
-                                <Button className="m-3" style={{ width: '110px' }} onClick={() => changeDifficulty('hard')}>hard</Button>
-                                <Button className="m-3" style={{ width: '110px' }} onClick={() => changeDifficulty('impossible')}>impossible</Button>
-                            </Col>
-                        </Row>
-                    </Card>
-                    <Row className='ml-auto'>
-                        <Col>
-                            {resumeGame ?
-                                <Button onClick={() => setInGame(true)}>Resume Game</Button> :
-                                <Button onClick={() => setInGame(true)}>Start Game</Button>
+                                        {localMultiplayer ?
+                                            <Form.Group className='m-2' style={{ width: '100px' }}>
+                                                <Form.Label>P2:</Form.Label>
+                                                <Form.Control
+                                                    style={{ backgroundColor: '#1E2127', color: 'white' }}
+                                                    type='text'
+                                                    value={secondPlayer}
+                                                    onChange={(e) => handleSecondPlayerName(e.target.value)} required />
+                                                {/* {passwordErr && <p style={{ color: 'red', padding: '1px' }}>{passwordErr}</p>} */}
+                                            </Form.Group> :
+                                            <Form.Group className='m-2' style={{ width: '100px' }}>
+                                                <Form.Label>AI:</Form.Label>
+                                                <Form.Control
+                                                    style={{ backgroundColor: '#1E2127', color: 'white' }}
+                                                    type='text'
+                                                    value={aiPlayer}
+                                                    onChange={(e) => handleAiName(e.target.value)} required />
+                                                {/* {emailErr && <p style={{ color: 'red', padding: '1px' }}>{emailErr}</p>} */}
+                                            </Form.Group>
+                                        }
+                                    </Form>
+                                </Col>
+                            </Row>
+                            {!localMultiplayer &&
+                                <Row className='m-auto pt-2'>
+                                    <Col style={{ display: 'flex', flexDirection: 'column' }}>
+                                        <h4 style={{ textAlign: 'center' }}>Difficulty:</h4>
+                                        <Button className="m-2 difficulty-buttons" style={(difficulty === 'easy') ? { backgroundColor: 'green' } : {}} onClick={() => changeDifficulty('easy')}>easy</Button>
+                                        <Button className="m-2 difficulty-buttons" style={(difficulty === 'moderate') ? { backgroundColor: 'yellow' } : {}} onClick={() => changeDifficulty('moderate')}>moderate</Button>
+                                        <Button className="m-2 difficulty-buttons" style={(difficulty === 'hard') ? { backgroundColor: 'orange' } : {}} onClick={() => changeDifficulty('hard')}>hard</Button>
+                                        <Button className="m-2 difficulty-buttons" style={(difficulty === 'impossible') ? { backgroundColor: 'red' } : {}} onClick={() => changeDifficulty('impossible')}>impossible</Button>
+                                    </Col>
+                                </Row>
                             }
-                        </Col>
-                    </Row>
+                            <Row style={{ marginRight: '1px', marginBottom: '10px', marginTop: '20px' }}>
+                                <Col></Col>
+                                <Col></Col>
+                                <Col>
+                                    {resumeGame ?
+                                        <Button style={{ width: '150px' }} onClick={() => setInGame(true)}>Resume Game</Button> :
+                                        <Button style={{ width: '150px' }} onClick={() => setInGame(true)}>Start Game</Button>
+                                    }
+                                </Col>
+                            </Row>
+                        </Card>
+                    </div>
                 </div>
             }
         </div>
