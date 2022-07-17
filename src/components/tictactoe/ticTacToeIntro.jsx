@@ -12,7 +12,7 @@ export default function TicTacToeIntro(props) {
     const [localMultiplayer, setLocalMultiplayer] = useState(false);
     const [warning, setWarning] = useState('');
     const [inGame, setInGame] = useState(false);
-    const [resumeGame, setResumeGame] = useState(false);
+    const [resumeGame, setResumeGame] = useState((localStorage.getItem('savedGame') !== null) ? true : false);
 
     useEffect(() => {
         setFirstPlayer((localStorage.getItem('playerName') !== null) ? (localStorage.getItem('playerName')) : 'O');
@@ -88,12 +88,12 @@ export default function TicTacToeIntro(props) {
                     </Row>
                     <div style={{ marginRight: '10px', marginLeft: '10px' }}>
                         <Card className='m-auto' style={{ maxWidth: '500px', backgroundColor: '#1E2127', color: 'white' }}>
-                            <Card.Title className='m-2' style={{ fontSize: '30px' }} >
-                                Tic Tac Toe:
+                            <Card.Title className='m-3' style={{ fontSize: '30px' }} >
+                                Tic Tac Toe
                             </Card.Title>
                             <Row className='m-auto'>
-                                <Col> <Button onClick={singlePlayer} style={(!localMultiplayer) ? { borderColor: 'red', width: '130px' } : { width: '130px' }}>Single Player</Button></Col>
-                                <Col><Button onClick={passAndPlay} style={(localMultiplayer) ? { borderColor: 'red', width: '130px' } : { width: '130px' }}>Pass And Play</Button></Col>
+                                <Col> <Button onClick={singlePlayer} style={(!localMultiplayer) ? { border: '2px solid red', width: '130px' } : { width: '130px' }}>Single Player</Button></Col>
+                                <Col><Button onClick={passAndPlay} style={(localMultiplayer) ? { border: '2px solid red', width: '130px' } : { width: '130px' }}>Pass And Play</Button></Col>
                             </Row>
                             <Row className='m-auto'>
                                 <Col>
@@ -101,7 +101,7 @@ export default function TicTacToeIntro(props) {
                                         <Form.Group className='m-2' style={{ width: '100px' }} >
                                             <Form.Label>P1:</Form.Label>
                                             <Form.Control
-                                                style={{ backgroundColor: '#1E2127', color: 'white' }}
+                                                style={{ backgroundColor: '#1E2127', color: 'white', textAlign: 'center' }}
                                                 type='text'
                                                 value={firstPlayer}
                                                 onChange={(e) => handlePlayerName(e.target.value)} required />
@@ -111,7 +111,7 @@ export default function TicTacToeIntro(props) {
                                             <Form.Group className='m-2' style={{ width: '100px' }}>
                                                 <Form.Label>P2:</Form.Label>
                                                 <Form.Control
-                                                    style={{ backgroundColor: '#1E2127', color: 'white' }}
+                                                    style={{ backgroundColor: '#1E2127', color: 'white', textAlign: 'center' }}
                                                     type='text'
                                                     value={secondPlayer}
                                                     onChange={(e) => handleSecondPlayerName(e.target.value)} required />
@@ -120,7 +120,7 @@ export default function TicTacToeIntro(props) {
                                             <Form.Group className='m-2' style={{ width: '100px' }}>
                                                 <Form.Label>AI:</Form.Label>
                                                 <Form.Control
-                                                    style={{ backgroundColor: '#1E2127', color: 'white' }}
+                                                    style={{ backgroundColor: '#1E2127', color: 'white', textAlign: 'center' }}
                                                     type='text'
                                                     value={aiPlayer}
                                                     onChange={(e) => handleAiName(e.target.value)} required />
@@ -132,8 +132,8 @@ export default function TicTacToeIntro(props) {
                             </Row>
                             {!localMultiplayer &&
                                 <Row className='m-auto pt-2'>
-                                    <Col style={{ display: 'flex', flexDirection: 'column' }}>
-                                        <h4 style={{ textAlign: 'center' }}>Difficulty:</h4>
+                                    <h4 style={{ textAlign: 'center' }}>Difficulty:</h4>
+                                    <Col className='button-grid' style={{ maxWidth: '490px' }}>
                                         <Button className="m-2 difficulty-buttons" style={(difficulty === 'easy') ? { backgroundColor: 'green' } : {}} onClick={() => changeDifficulty('easy')}>easy</Button>
                                         <Button className="m-2 difficulty-buttons" style={(difficulty === 'moderate') ? { backgroundColor: 'yellow' } : {}} onClick={() => changeDifficulty('moderate')}>moderate</Button>
                                         <Button className="m-2 difficulty-buttons" style={(difficulty === 'hard') ? { backgroundColor: 'orange' } : {}} onClick={() => changeDifficulty('hard')}>hard</Button>
@@ -142,7 +142,12 @@ export default function TicTacToeIntro(props) {
                                 </Row>
                             }
                             <Row style={{ marginRight: '1px', marginBottom: '10px', marginTop: '20px' }}>
-                                <Col></Col>
+                                {resumeGame ?
+                                    <Col>
+                                        <Button style={{ width: '150px', marginLeft: '10px' }} onClick={() => { setResumeGame(false); setInGame(true); }}>New Game</Button>
+                                    </Col> :
+                                    <Col></Col>
+                                }
                                 <Col></Col>
                                 <Col>
                                     {resumeGame ?

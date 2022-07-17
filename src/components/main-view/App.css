@@ -24,6 +24,13 @@
   color: #61dafb;
 }
 
+.box {
+  width: 230px;
+  height: 230px;
+  border: 1px solid #61dafb;
+  margin: 20px;
+}
+
 .project-image {
   width: 200px;
   height: 200px;
@@ -31,17 +38,9 @@
   margin: 20px;
 }
 
-.project-image>h4 {
-  margin-top: 70px;
-  visibility: hidden;
+.title {
   color: white;
-  z-index: 2;
-  transition: all ease-in-out 0.2s;
-}
-
-.project-image:hover>h4 {
-  transition: all ease-in-out 0.2s;
-  visibility: visible;
+  text-align: center;
 }
 
 @keyframes App-logo-spin {

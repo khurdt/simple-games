@@ -1,24 +1,26 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { useRef, useState } from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
+import { useState } from 'react';
+import { Row, Col, Button, Modal } from 'react-bootstrap';
 
 export default function TicTacToeGame(props) {
     const { difficulty, localMultiplayer, firstPlayer, secondPlayer, aiPlayer, resumeGame, inGame, setInGame, setResumeGame } = props;
-    const [endgame, setEndGame] = useState(true);
+    const [endgame, setEndGame] = useState(false);
+    const [tieGame, setTieGame] = useState(false);
+    const [show, setShow] = useState(false);
     const [refresh, setRefresh] = useState(false);
+    const [winCombo, setWinCombo] = useState([]);
     const [origBoard, setOrigBoard] = useState(
         (localStorage.getItem('savedGame') === null || resumeGame === false) ?
             Array.from(Array(9).keys()) :
             JSON.parse(localStorage.getItem('savedGame'))
     );
     const [players, setPlayers] = useState([]);
-    const [tieGame, setTieGame] = useState(false);
     const [gameWon, setGameWon] = useState({
         player: '',
-        index: []
+        index: [],
+        color: ''
     })
-    const [winner, setWinner] = useState('');
     // const cells = useRef();
     const winCombos = [
         //top to bottom
@@ -41,27 +43,36 @@ export default function TicTacToeGame(props) {
         } else {
             setPlayers([firstPlayer, aiPlayer])
         }
+        setResumeGame(true);
     }, [inGame, origBoard])
+
+    const resetGame = () => {
+        setEndGame(false);
+        setShow(false);
+        setOrigBoard(Array.from(Array(9).keys()));
+        setWinCombo([]);
+        setGameWon({});
+        setTieGame(false);
+    }
 
     /**---------------------------------------------------Turns----------------------------------------------------------------------*/
 
     const turnClick = (item, i) => {
-        //make sure no one takes more turns than they ought
-        let p1Moves = origBoard.filter(elem => elem === firstPlayer),
-            aiMoves = origBoard.filter(elem => elem === aiPlayer),
-            p2Moves = origBoard.filter(elem => elem === secondPlayer);
+        let p1Moves = (origBoard.filter(elem => elem === firstPlayer).length),
+            aiMoves = (origBoard.filter(elem => elem === aiPlayer).length),
+            p2Moves = (origBoard.filter(elem => elem === secondPlayer).length);
+
         if (typeof origBoard[i] == 'number') {
-            //first player turn
-            if ((p1Moves.length <= aiMoves.length || p1Moves.length <= p2Moves.length)) {
-                turn(item, firstPlayer);
+            if ((p1Moves <= aiMoves || p1Moves <= p2Moves)) {
+                turn(i, firstPlayer);
             }
             //ai turn
-            if (!checkWin(origBoard, firstPlayer) && localMultiplayer === false && (aiMoves.length <= p1Moves.length)) {
+            if (!checkWin(origBoard, firstPlayer) && !checkTie() && localMultiplayer === false && (aiMoves <= p1Moves)) {
                 turn(bestSpot(), aiPlayer);
             }
             //second player turn
-            if (!checkWin(origBoard, firstPlayer) && (p2Moves.length < p1Moves.length) && localMultiplayer === true) {
-                turn(item, secondPlayer);
+            if (!checkWin(origBoard, firstPlayer) && !checkTie() && (p1Moves > p2Moves) && localMultiplayer === true) {
+                turn(i, secondPlayer);
             }
         }
     }
@@ -70,10 +81,8 @@ export default function TicTacToeGame(props) {
         origBoard[squareId] = player;
         setRefresh(!refresh);
         localStorage.setItem('savedGame', JSON.stringify(origBoard));
-        // document.getElementById(squareId).classList.add('move');
-        // document.getElementById(squareId).innerText = player;
         let gameWon = checkWin(origBoard, player);
-        if (gameWon) gameOver(gameWon);
+        (gameWon) && gameOver(gameWon);
     }
 
     /**---------------------------------------------------Score Checking----------------------------------------------------------------------*/
@@ -95,7 +104,8 @@ export default function TicTacToeGame(props) {
             if (win.every((element) => plays.indexOf(element) > -1)) {
                 gameWon = {
                     index: index,
-                    player: player
+                    player: player,
+                    color: ((player === aiPlayer ? 'red' : (player === firstPlayer) ? 'blue' : 'purple'))
                 };
                 break;
             }
@@ -104,25 +114,29 @@ export default function TicTacToeGame(props) {
     }
 
     const gameOver = (gameWon) => {
-        let player = gameWon.player
-        setWinner((player === aiPlayer ? 'red' : player === firstPlayer ? 'blue' : 'purple'));
         setGameWon(gameWon);
-        declareWinner(player + ' wins');
+        let winCombo = [];
+        for (let index of winCombos[gameWon.index]) {
+            winCombo.push(index);
+        };
+        setWinCombo(winCombo);
+        declareWinner(gameWon.player + ' wins');
     }
 
     const checkTie = () => {
         if (emptySquares().length === 0) {
             setTieGame(true);
-            declareWinner('Tie Game!');
+            declareWinner();
             return true;
         }
         return false;
     }
 
-    const declareWinner = (who) => {
+    const declareWinner = () => {
         localStorage.removeItem('savedGame');
-        // document.querySelector('.endgame').style.display = 'block';
-        // document.querySelector('.endgame-text').innerText = who;
+        setEndGame(true);
+        setResumeGame(false);
+        setShow(true);
     }
 
     const emptySquares = () => {
@@ -134,21 +148,21 @@ export default function TicTacToeGame(props) {
         let aiPlays = origBoard.filter(element => element === aiPlayer).length
 
         if (difficulty === 'easy') {
-            if (aiPlays === 1 || aiPlays > 4) {
+            if (aiPlays <= 1 && aiPlays > 0) {
                 return minimax(origBoard, aiPlayer).index
             } else {
                 return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
             }
         }
         else if (difficulty === 'moderate') {
-            if (aiPlays === 1 || aiPlays > 3) {
+            if (aiPlays < 2 && aiPlays > 0) {
                 return minimax(origBoard, aiPlayer).index
             } else {
                 return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
             }
         }
         else if (difficulty === 'hard') {
-            if (aiPlays === 1 || aiPlays > 2) {
+            if (aiPlays < 3 && aiPlays > 0) {
                 return minimax(origBoard, aiPlayer).index
             } else {
                 return emptySquares()[Math.floor(Math.random() * emptySpots.length)];
@@ -221,11 +235,14 @@ export default function TicTacToeGame(props) {
         <div>
             <Row>
                 <Col className='m-3'>
-                    <Button type='button' onClick={() => { setInGame(false) }}>Return</Button>
+                    {endgame === true ?
+                        <Button type='button' onClick={() => { setEndGame(false); setInGame(false); }}>Return</Button> :
+                        <Button type='button' onClick={() => { setInGame(false); }}>Return</Button>
+                    }
                 </Col>
             </Row>
             <Row className='justify-content-md-center'>
-                <table className='table'>
+                <table className='table' style={(tieGame === true) ? { backgroundColor: 'green' } : {}}>
                     <tbody>
                         <tr className='tr'>
                             {origBoard.map((item, i) => {
@@ -234,7 +251,7 @@ export default function TicTacToeGame(props) {
                                         <td
                                             key={i}
                                             onClick={() => { turnClick(item, i) }}
-                                            style={(gameWon.player === item && gameWon.index === i) ? { backgroundColor: winner } : {}}
+                                            style={(gameWon.player === item && winCombo.includes(i)) ? { backgroundColor: gameWon.color } : {}}
                                             className='cell'>
                                             <div className={(players.includes(item)) ? 'clicked' : 'notClicked'}>{item}</div>
                                         </td>
@@ -249,7 +266,7 @@ export default function TicTacToeGame(props) {
                                         <td
                                             key={i}
                                             onClick={() => { turnClick(item, i) }}
-                                            style={(gameWon.player === item && gameWon.index === i) ? { backgroundColor: winner } : {}}
+                                            style={(gameWon.player === item && winCombo.includes(i)) ? { backgroundColor: gameWon.color } : {}}
                                             className='cell'>
                                             <div className={(players.includes(item)) ? 'clicked' : 'notClicked'}>{item}</div>
                                         </td>
@@ -264,7 +281,7 @@ export default function TicTacToeGame(props) {
                                         <td
                                             key={i}
                                             onClick={() => { turnClick(item, i) }}
-                                            style={(gameWon.player === item && gameWon.index === i) ? { backgroundColor: winner } : {}}
+                                            style={(gameWon.player === item && winCombo.includes(i)) ? { backgroundColor: gameWon.color } : {}}
                                             className='cell'>
                                             <div className={(players.includes(item)) ? 'clicked' : 'notClicked'}>{item}</div>
                                         </td>
@@ -275,10 +292,20 @@ export default function TicTacToeGame(props) {
                     </tbody>
                 </table>
             </Row>
-            {/* <div className="endgame">
-                <div className="endgame-text"></div>
-                <button className="endgame-reset">Replay</button>
-            </div> */}
+            <Modal show={show} onHide={() => setShow(false)} className='details-modal .modal-content'>
+                <Modal.Header style={{ textAlign: 'center', fontSize: '30px' }} closeButton>
+                    Game!
+                </Modal.Header>
+                <Modal.Body style={{ fontSize: '20px', minHeight: '100px', textAlign: 'center', marginTop: '20px', color: (tieGame === true) ? 'green' : gameWon.color }}>{(tieGame === true) ? 'Its a Tie!' : `${gameWon.player} Wins!`}</Modal.Body>
+                <Modal.Footer className='.details-footer'>
+                    <Button className='close-button' style={{ marginRight: 'auto' }} variant="secondary" onClick={() => { setEndGame(false); setInGame(false); setShow(false); }}>
+                        Change Settings
+                    </Button>
+                    <Button className='close-button' variant="secondary" onClick={() => resetGame()}>
+                        Replay
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 
