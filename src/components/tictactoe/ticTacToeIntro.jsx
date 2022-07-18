@@ -83,12 +83,12 @@ export default function TicTacToeIntro(props) {
                     setResumeGame={setResumeGame} />
                 :
                 <div>
-                    <Row>
-                        <Col className='m-3'>
+                    <Row style={{ margin: '0px', padding: '0px', width: '100%' }}>
+                        <Col className='mb-3 mt-3 ml-3'>
                             <Button type='button' onClick={() => { onBackClick() }}>Return</Button>
                         </Col>
                     </Row>
-                    <div style={{ marginRight: '10px', marginLeft: '10px' }}>
+                    <div className='m-2'>
                         <Card className='m-auto' style={{ maxWidth: '500px', backgroundColor: '#1E2127', color: 'white' }}>
                             <Card.Title className='m-3' style={{ fontSize: '30px' }} >
                                 Tic Tac Toe
@@ -143,17 +143,17 @@ export default function TicTacToeIntro(props) {
                                     </Col>
                                 </Row>
                             }
-                            <Row className='justify-content-md-space-between' style={{ marginBottom: '10px', marginTop: '20px' }}>
+                            <Row className='justify-content-md-space-between footer' style={{ marginBottom: '10px', marginTop: '20px' }}>
                                 {resumeGame ?
                                     <Col>
                                         <Button style={{ width: '120px', marginLeft: '10px' }} onClick={() => { setResumeGame(false); setInGame(true); }}>New Game</Button>
                                     </Col> :
                                     <Col></Col>
                                 }
-                                <Col xs={size} sm={4} md={4}>
+                                <Col xs={size} sm={4} md={4} style={{ margin: '0px', padding: '0px' }}>
                                     {resumeGame ?
                                         <Button style={window.innerWidth < 400 ? { maxWidth: '140px', marginLeft: '25px' } : { maxWidth: '140px', marginLeft: '10px' }} onClick={() => setInGame(true)}>Resume Game</Button> :
-                                        <Button style={{ width: '120px' }} onClick={() => setInGame(true)}>Start Game</Button>
+                                        <Button style={window.innerWidth < 400 ? { maxWidth: '140px', marginLeft: '55px' } : { maxWidth: '140px', marginLeft: '10px' }} onClick={() => setInGame(true)}>Start Game</Button>
                                     }
                                 </Col>
                             </Row>

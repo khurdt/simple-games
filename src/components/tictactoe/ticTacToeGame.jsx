@@ -233,7 +233,7 @@ export default function TicTacToeGame(props) {
 
     return (
         <div>
-            <Row>
+            <Row style={{ margin: '0px', padding: '0px' }}>
                 <Col className='m-3'>
                     {endgame === true ?
                         <Button type='button' onClick={() => { setEndGame(false); setInGame(false); }}>Return</Button> :
@@ -241,7 +241,7 @@ export default function TicTacToeGame(props) {
                     }
                 </Col>
             </Row>
-            <Row className='justify-content-md-center'>
+            <Row className='justify-content-md-center' style={{ margin: '0px', padding: '0px' }}>
                 <table className='table' style={(tieGame === true) ? { backgroundColor: 'green' } : {}}>
                     <tbody>
                         <tr className='tr'>

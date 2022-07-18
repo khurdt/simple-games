@@ -57,11 +57,25 @@ table tr td.cell:last-child {
     flex-direction: row;
 }
 
+.row.footer {
+    --bs-gutter-x: 0px;
+}
+
 @media all and (max-width: 520px) {
     .button-grid {
         flex-direction: column;
     }
 }
+
+@media all and (max-width: 767px) {
+    table.table {
+        width: 300px;
+        height: 300px;
+        margin: 10px auto;
+
+    }
+}
+
 
 /* .endgame {
     display: none;
