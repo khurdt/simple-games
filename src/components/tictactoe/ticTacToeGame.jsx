@@ -20,7 +20,7 @@ export default function TicTacToeGame(props) {
         player: '',
         index: [],
         color: ''
-    })
+    });
     // const cells = useRef();
     const winCombos = [
         //top to bottom
@@ -255,7 +255,7 @@ export default function TicTacToeGame(props) {
                                             className='cell'>
                                             <div className={(players.includes(item)) ? 'clicked' : 'notClicked'}>{item}</div>
                                         </td>
-                                    )
+                                    );
                                 }
                             })}
                         </tr>
@@ -270,7 +270,7 @@ export default function TicTacToeGame(props) {
                                             className='cell'>
                                             <div className={(players.includes(item)) ? 'clicked' : 'notClicked'}>{item}</div>
                                         </td>
-                                    )
+                                    );
                                 }
                             })}
                         </tr>
@@ -285,7 +285,7 @@ export default function TicTacToeGame(props) {
                                             className='cell'>
                                             <div className={(players.includes(item)) ? 'clicked' : 'notClicked'}>{item}</div>
                                         </td>
-                                    )
+                                    );
                                 }
                             })}
                         </tr>

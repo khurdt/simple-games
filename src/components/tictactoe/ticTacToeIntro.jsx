@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { Row, Col, Form, Button, Card } from 'react-bootstrap';
 import TicTacToeGame from './ticTacToeGame';
 import './ticTacToe.css';
 
@@ -10,7 +10,7 @@ export default function TicTacToeIntro(props) {
     const [secondPlayer, setSecondPlayer] = useState('X');
     const [difficulty, setDifficulty] = useState('easy');
     const [localMultiplayer, setLocalMultiplayer] = useState(false);
-    const [warning, setWarning] = useState('');
+    // const [warning, setWarning] = useState('');
     const [inGame, setInGame] = useState(false);
     const [resumeGame, setResumeGame] = useState((localStorage.getItem('savedGame') !== null) ? true : false);
 
@@ -65,6 +65,8 @@ export default function TicTacToeIntro(props) {
         localStorage.setItem('multiplayer', JSON.stringify(false));
         setResumeGame(false);
     }
+
+    let size = (window.innerWidth < 575 && window.innerWidth > 487) ? 4 : (window.innerWidth < 400) ? 6 : 5;
 
     return (
         <div>
@@ -141,18 +143,17 @@ export default function TicTacToeIntro(props) {
                                     </Col>
                                 </Row>
                             }
-                            <Row style={{ marginRight: '1px', marginBottom: '10px', marginTop: '20px' }}>
+                            <Row className='justify-content-md-space-between' style={{ marginBottom: '10px', marginTop: '20px' }}>
                                 {resumeGame ?
                                     <Col>
-                                        <Button style={{ width: '150px', marginLeft: '10px' }} onClick={() => { setResumeGame(false); setInGame(true); }}>New Game</Button>
+                                        <Button style={{ width: '120px', marginLeft: '10px' }} onClick={() => { setResumeGame(false); setInGame(true); }}>New Game</Button>
                                     </Col> :
                                     <Col></Col>
                                 }
-                                <Col></Col>
-                                <Col>
+                                <Col xs={size} sm={4} md={4}>
                                     {resumeGame ?
-                                        <Button style={{ width: '150px' }} onClick={() => setInGame(true)}>Resume Game</Button> :
-                                        <Button style={{ width: '150px' }} onClick={() => setInGame(true)}>Start Game</Button>
+                                        <Button style={window.innerWidth < 400 ? { maxWidth: '140px', marginLeft: '25px' } : { maxWidth: '140px', marginLeft: '10px' }} onClick={() => setInGame(true)}>Resume Game</Button> :
+                                        <Button style={{ width: '120px' }} onClick={() => setInGame(true)}>Start Game</Button>
                                     }
                                 </Col>
                             </Row>

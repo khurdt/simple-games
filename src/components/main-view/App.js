@@ -16,15 +16,14 @@ export default function App() {
         <Routes>
           <Route
             exact
-            path="/"
+            path="/simple-games"
             element={
               <Container fluid style={{ margin: '0', padding: '0' }}>
-
                 <Container style={{ paddingTop: '100px' }}>
                   <Row className='m-auto'>
                     <Col className='m-auto' xs={12} sm={12} md={4}>
                       <Card className='m-auto' style={{ width: '250px', height: '200px', backgroundColor: '#282c34', border: 'none', margin: 'auto' }}>
-                        <Link to='tictactoe' style={{ textDecoration: 'none' }}>
+                        <Link to='/simple-games/tictactoe' style={{ textDecoration: 'none' }}>
                           <Card.Title className='title'>Tic Tac Toe</Card.Title>
                           <Card.Img style={{ height: '200px' }} src={TicTacToeImg}></Card.Img>
                         </Link>
@@ -35,7 +34,7 @@ export default function App() {
               </Container>
             }
           />
-          <Route path="tictactoe" element={<TicTacToeIntro onBackClick={() => navigate(-1)} />} />
+          <Route path="/simple-games/tictactoe" element={<TicTacToeIntro onBackClick={() => navigate(-1)} />} />
         </Routes>
       </div>
     </>
