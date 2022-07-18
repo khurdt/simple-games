@@ -1,9 +1,9 @@
-import React, { Component, useCallback } from 'react';
+import React from 'react';
 import TicTacToeIntro from '../tictactoe/ticTacToeIntro';
 import Menu from '../navbar/navbar';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import './App.css';
-import { Button, Row, Col, Container, Card } from 'react-bootstrap';
+import { Row, Col, Container, Card } from 'react-bootstrap';
 import TicTacToeImg from '../../images/tictactoeimg.png';
 
 export default function App() {

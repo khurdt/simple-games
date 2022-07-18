@@ -2,7 +2,7 @@ import React from 'react';
 import './navbar-view.scss';
 import { Link } from 'react-router-dom';
 import logo from '../../images/logo.svg';
-import { Navbar, Nav, Button, Row, Col, Container, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 
 class Menu extends React.Component {
     constructor(props) {
@@ -34,10 +34,10 @@ class Menu extends React.Component {
             color: 'white',
             borderBottom: (!(window.location.href.includes('tictactoe' || 'login' || 'register'))) ? '2px solid #1266F1' : '0px'
         };
-        let userIcon = {
-            color: 'white',
-            borderBottom: (pageActive === 'user' || window.location.href.includes('tictactoe')) ? '2px solid #1266F1' : '0px'
-        };
+        // let userIcon = {
+        //     color: 'white',
+        //     borderBottom: (pageActive === 'user' || window.location.href.includes('tictactoe')) ? '2px solid #1266F1' : '0px'
+        // };
 
         return (
             <>
