@@ -24,8 +24,6 @@ jobs:
         npm install
         CI=false
         npm run build
-      env:
-
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
