@@ -25,10 +25,6 @@ class Menu extends React.Component {
     }
 
     render() {
-        // const { pageActive } = this.state;
-        // const { user } = this.props;
-
-        // const isAuth = localStorage.getItem('token');
 
         let homeIcon = {
             color: 'white',
