@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <link rel="stylesheet" type="text/css" href="./pazaak.css">
+  <title>Pazaak</title>
+</head>
+
+<body>
+  <div class="heading">
+    <div class="player1">
+      <div class="player1-item">Player 1</div>
+      <div class="player1-item">10</div>
+      <div class="player1-item"></div>
+    </div>
+    <div class="player2">
+      <div class="player2-item">10</div>
+      <div class="player2-item">Player 2</div>
+      <div class="player2-item"></div>
+    </div>
+  </div>
+  <div class="board">
+    <div style="position:relative">
+      <div class="scoreboard1">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+      </div>
+      <table class="cardTable">
+        <tr>
+          <td class="cell" id="b1"></td>
+          <td class="cell" id="b2"></td>
+          <td class="cell" id="b3"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b4"></td>
+          <td class="cell" id="b5"></td>
+          <td class="cell" id="b6"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b7"></td>
+          <td class="cell" id="b8"></td>
+          <td class="cell" id="b9"></td>
+        </tr>
+      </table>
+    </div>
+    <div style="position:relative">
+      <div class="scoreboard2">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+      </div>
+      <table class="cardTable">
+        <tr>
+          <td class="cell" id="b1"></td>
+          <td class="cell" id="b2"></td>
+          <td class="cell" id="b3"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b4"></td>
+          <td class="cell" id="b5"></td>
+          <td class="cell" id="b6"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b7"></td>
+          <td class="cell" id="b8"></td>
+          <td class="cell" id="b9"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="playersCards">
+    <div class="player1Cards">
+      <table class="playerHand">
+        <caption>Player 1 Hand</caption>
+        <tr>
+          <td class="cell" id="1"></td>
+          <td class="cell" id="2"></td>
+          <td class="cell" id="3"></td>
+          <td class="cell" id="4"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="player2Cards">
+      <table class="playerHand">
+        <caption>Player 2 Hand</caption>
+        <tr>
+          <td class="cell" id="1"></td>
+          <td class="cell" id="2"></td>
+          <td class="cell" id="3"></td>
+          <td class="cell" id="4"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <script type="module" src="./pazaak.js"></script>
+</body>
+
+</html>

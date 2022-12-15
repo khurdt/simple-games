@@ -1,0 +1,137 @@
+.heading {
+  display: flex;
+  margin: auto;
+  width: 650px;
+  justify-content: center;
+}
+
+.player1 {
+  display: grid;
+  grid-template-columns: 85% 15%;
+  width: 320px;
+  position: relative;
+}
+
+.player1-item:nth-child(3) {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 1px solid black;
+  border-radius: 50%;
+  transform: translate(-60px, 1px);
+}
+
+.player1-item:nth-child(2) {
+  text-align: center;
+  padding: 10px;
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.player2 {
+  display: grid;
+  grid-template-columns: 15% 85%;
+  width: 320px;
+  position: relative;
+}
+
+.player2-item:nth-child(1) {
+  text-align: center;
+  padding: 10px;
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.player2-item:nth-child(2) {
+  text-align: right;
+}
+
+.player2-item:nth-child(3) {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 1px solid black;
+  border-radius: 50%;
+  transform: translate(330px, 1px);
+}
+
+.board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: auto;
+  width: 650px;
+}
+
+.scoreboard1 {
+  position: absolute;
+  transform: translate(-20px, 150px);
+}
+
+.scoreboard2 {
+  position: absolute;
+  transform: translate(320px, 150px);
+}
+
+
+.bubble {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+
+.cardTable {
+  width: 300px;
+  height: auto;
+  margin: auto;
+}
+
+td {
+  margin-bottom: 10px;
+}
+
+.cell {
+  border: 1px solid black;
+  margin: 10px;
+  border-radius: 10%;
+  height: 120px;
+}
+
+.playersCards {
+  width: 850px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 15px;
+}
+
+.player1Cards {
+  margin: auto;
+  padding-right: 10px;
+}
+
+.player2Cards {
+  margin: auto;
+  padding-left: 10px;
+}
+
+.playerHand {
+  width: 400px;
+  margin: auto;
+}
+
+@media all and (max-width: 700px) {
+  .board {
+    grid-template-columns: 1fr;
+  }
+
+  .playersCards {
+    grid-template-columns: 1fr;
+  }
+}
