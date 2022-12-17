@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import './pazzak.css';
+import PazzakCard from './pazzak-card/pazzakCard';
 
 export default function Pazzak() {
 
@@ -84,7 +85,9 @@ export default function Pazzak() {
             return (
               <Col key={i} xs={4} sm={4} md={4}>
                 <div className='cell' style={c === '1' ? { backgroundColor: '#292929' } : {}}>
-                  {(c !== '1') && c}
+                  {(c !== '1') &&
+                    <PazzakCard c={c} deck={true} />
+                  }
                 </div>
               </Col>
             )
@@ -105,7 +108,9 @@ export default function Pazzak() {
             return (
               <Col key={i} xs={4} sm={4} md={4}>
                 <div className='cell' style={c === '2' ? { backgroundColor: '#292929' } : {}}>
-                  {(c !== '2') && c}
+                  {(c !== '2') &&
+                    <PazzakCard c={c} deck={true} />
+                  }
                 </div>
               </Col>
             )
