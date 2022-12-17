@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import './index.css';
 import App from './components/main-view/App';
@@ -10,11 +10,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <Container fluid style={{ margin: '0', padding: '0' }}>
         <App />
       </Container>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );
 

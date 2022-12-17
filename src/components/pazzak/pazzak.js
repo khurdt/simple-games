@@ -33,6 +33,11 @@ export default function Pazzak() {
     for (let i = 0; i < 4; i++) {
       deck = [...deck].concat(...cards);
     }
+    for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    console.log(deck);
   }
 
   const getCard = () => {
@@ -64,6 +69,16 @@ export default function Pazzak() {
     player2Board[index] = getCard();
     setRefresh(!refresh);
     setPlayer2BoardCount(player2Board.reduce((total, a) => (typeof a === 'number') ? total += a : total))
+  }
+
+  const addFromPlayerHand = (c, number) => {
+    if (number === 1) {
+      let index = player1Board.indexOf('2');
+      player1Board[index] = c;
+    } else {
+      let index = player2Board.indexOf('2');
+      player2Board[index] = c;
+    }
   }
 
   return (
@@ -122,7 +137,11 @@ export default function Pazzak() {
           {player1Hand.map((c, i) => {
             return (
               <Col key={i} xs={3} sm={3} md={3}>
-                <div className='cell'></div>
+                <div className='cell' onClick={() => { (turn === 'player1') && addFromPlayerHand(c, 1) }}>
+                  {(c !== '1') &&
+                    <PazzakCard c={c} />
+                  }
+                </div>
               </Col>
             )
           })}
@@ -131,7 +150,11 @@ export default function Pazzak() {
           {player2Hand.map((c, i) => {
             return (
               <Col key={i} xs={3} sm={3} md={3}>
-                <div className='cell'></div>
+                <div className='cell' onClick={() => (turn === 'player2') && addFromPlayerHand(c, 2)}>
+                  {(c !== '2') &&
+                    <PazzakCard c={c} />
+                  }
+                </div>
               </Col>
             )
           })}

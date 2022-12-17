@@ -10,7 +10,7 @@
   border-top-right-radius: 5px;
 }
 
-.sign {
+.signTop {
   position: absolute;
   top: 0;
   right: 0;
@@ -18,12 +18,29 @@
   height: 16px;
   border-radius: 50%;
   color: white;
-  font-size: 15px;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: 900;
   transform: translate(1px, -1px);
+}
+
+.signBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  transform: translate(-1px, 1px);
+  background-color: red;
 }
 
 .bottom {
@@ -67,7 +84,7 @@
   align-items: center;
   height: 35px;
   background-color: black;
-  font-size: 15px;
+  font-size: 16px;
   color: white;
   font-weight: 900;
 }
