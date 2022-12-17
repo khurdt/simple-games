@@ -4,19 +4,20 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import './pazzak.css';
 import PazzakCard from './pazzak-card/pazzakCard';
+import PickCards from './pickCards/pickCards';
 
 export default function Pazzak() {
 
   const [player1Score, setPlayer1Score] = useState([]);
   const [player2Score, setPlayer2Score] = useState([]);
-  const [player1Board, setPlayer1Board] = useState(Array(9).fill('1'));
-  const [player2Board, setPlayer2Board] = useState(Array(9).fill('2'));
+  const [player1Board, setPlayer1Board] = useState(Array(9).fill('a'));
+  const [player2Board, setPlayer2Board] = useState(Array(9).fill('b'));
   const [player1BoardCount, setPlayer1BoardCount] = useState(0);
   const [player2BoardCount, setPlayer2BoardCount] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [turn, setTurn] = useState('');
-  let player1Hand = Array(4).fill('1');
-  let player2Hand = Array(4).fill('2');
+  let player1Hand = Array(4).fill('a');
+  let player2Hand = Array(4).fill('b');
   let deck = [];
 
   useEffect(() => {
@@ -55,30 +56,26 @@ export default function Pazzak() {
         if (player1Card === player2Card) { whoGoesFirst(); }
   }
 
-  const player1Turn = () => {
+  const Count = () => {
+    setPlayer1BoardCount(player1Board.reduce((total, a) => (a !== 'a') ? total += parseInt(a) : total, 0))
+    setPlayer2BoardCount(player2Board.reduce((total, a) => (a !== 'b') ? total += parseInt(a) : total, 0))
+  }
+
+  const player1Turn = (myCard) => {
     setTurn('player1');
-    let index = player1Board.indexOf('1');
-    player1Board[index] = getCard();
+    let index = player1Board.indexOf('a');
+    player1Board[index] = (myCard) ? myCard : getCard();
     setRefresh(!refresh);
-    setPlayer1BoardCount(player1Board.reduce((total, a) => (typeof a === 'number') ? total += a : total))
+    Count();
+    console.log(player1Board);
   }
 
-  const player2Turn = () => {
+  const player2Turn = (myCard) => {
     setTurn('player2');
-    let index = player2Board.indexOf('2');
-    player2Board[index] = getCard();
+    let index = player2Board.indexOf('b');
+    player2Board[index] = (myCard) ? myCard : getCard();
     setRefresh(!refresh);
-    setPlayer2BoardCount(player2Board.reduce((total, a) => (typeof a === 'number') ? total += a : total))
-  }
-
-  const addFromPlayerHand = (c, number) => {
-    if (number === 1) {
-      let index = player1Board.indexOf('2');
-      player1Board[index] = c;
-    } else {
-      let index = player2Board.indexOf('2');
-      player2Board[index] = c;
-    }
+    Count();
   }
 
   return (
@@ -99,9 +96,9 @@ export default function Pazzak() {
           {player1Board.map((c, i) => {
             return (
               <Col key={i} xs={4} sm={4} md={4}>
-                <div className='cell' style={c === '1' ? { backgroundColor: '#292929' } : {}}>
-                  {(c !== '1') &&
-                    <PazzakCard c={c} deck={true} />
+                <div className='cell' style={c === 'a' ? { backgroundColor: '#292929' } : {}}>
+                  {(c !== 'a') &&
+                    <PazzakCard c={c} />
                   }
                 </div>
               </Col>
@@ -122,9 +119,9 @@ export default function Pazzak() {
           {player2Board.map((c, i) => {
             return (
               <Col key={i} xs={4} sm={4} md={4}>
-                <div className='cell' style={c === '2' ? { backgroundColor: '#292929' } : {}}>
-                  {(c !== '2') &&
-                    <PazzakCard c={c} deck={true} />
+                <div className='cell' style={c === 'b' ? { backgroundColor: '#292929' } : {}}>
+                  {(c !== 'b') &&
+                    <PazzakCard c={c} />
                   }
                 </div>
               </Col>
@@ -137,8 +134,8 @@ export default function Pazzak() {
           {player1Hand.map((c, i) => {
             return (
               <Col key={i} xs={3} sm={3} md={3}>
-                <div className='cell' onClick={() => { (turn === 'player1') && addFromPlayerHand(c, 1) }}>
-                  {(c !== '1') &&
+                <div className='cell' style={{ cursor: 'pointer' }} onClick={() => { (turn === 'player1') && player1Turn(c) }}>
+                  {(c !== 'a') &&
                     <PazzakCard c={c} />
                   }
                 </div>
@@ -150,8 +147,8 @@ export default function Pazzak() {
           {player2Hand.map((c, i) => {
             return (
               <Col key={i} xs={3} sm={3} md={3}>
-                <div className='cell' onClick={() => (turn === 'player2') && addFromPlayerHand(c, 2)}>
-                  {(c !== '2') &&
+                <div className='cell' style={{ cursor: 'pointer' }} onClick={() => (turn === 'player2') && player2Turn(c)}>
+                  {(c !== 'b') &&
                     <PazzakCard c={c} />
                   }
                 </div>
