@@ -40,7 +40,7 @@ class Menu extends React.Component {
                 <Navbar style={{ backgroundColor: '#1E2127', height: '56px', margin: '0', padding: '0', zIndex: '100' }}>
                     <Navbar.Brand style={{ color: '#61dafb', fontSize: '20px' }}><img src={logo} className="App-logo" alt="logo" /><span>React Games</span></Navbar.Brand>
                     <Nav className='ml-auto' style={{ backgroundColor: '#1E2127', padding: '5px', display: 'flex' }}>
-                        <Nav.Link className='text-center' as={Link} onClick={() => { this.setState({ pageActive: 'home' }) }} style={homeIcon} to='/simple-games'>Games</Nav.Link>
+                        <Nav.Link className='text-center' as={Link} onClick={() => { this.setState({ pageActive: 'home' }) }} style={homeIcon} to='/'>Games</Nav.Link>
                         {/* <Nav.Link className='text-center' as={Link} onClick={() => { this.setState({ pageActive: 'tictactoe' }) }} style={userIcon} to='/tictactoe'>Tic Tac Toe</Nav.Link> */}
                     </Nav>
                 </Navbar>
