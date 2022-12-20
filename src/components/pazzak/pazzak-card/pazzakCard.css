@@ -8,6 +8,9 @@
   width: 100%;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  -webkit-box-shadow: inset 0px 46px 50px -45px rgba(0, 0, 0, 0.9);
+  -moz-box-shadow: inset 0px 46px 50px -45px rgba(0, 0, 0, 0.9);
+  box-shadow: inset 0px 46px 50px -45px rgba(0, 0, 0, 0.9);
 }
 
 .bubbleTop {
@@ -24,14 +27,17 @@
   font-size: 16px;
   font-weight: 900;
   transform: translate(1px, -1px);
+  -webkit-box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.8);
 }
 
 .signTop {
-  transform: translate(0.5px, -2px);
+  transform: translate(0.3px, -2px);
 }
 
 .signBottom {
-  transform: translate(-0.5px, -1px);
+  transform: translate(0.3px, -2px);
 }
 
 .bubbleBottom {
@@ -49,6 +55,10 @@
   font-weight: 900;
   transform: translate(-1px, 1px);
   background-color: red;
+  -webkit-box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.8);
+
 }
 
 .bottom {
@@ -57,6 +67,9 @@
   width: 100%;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  -webkit-box-shadow: inset 0px -46px 50px -45px rgba(0, 0, 0, 0.9);
+  -moz-box-shadow: inset 0px -46px 50px -45px rgba(0, 0, 0, 0.9);
+  box-shadow: inset 0px -46px 50px -45px rgba(0, 0, 0, 0.9);
 }
 
 .triangleUp {
@@ -66,9 +79,8 @@
   transform: translateX(50%);
   width: 0;
   height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-
+  border-left: 10px solid rgba(0, 0, 0, 0);
+  border-right: 10px solid rgba(0, 0, 0, 0);
   border-bottom: 10px solid white;
 }
 
@@ -79,9 +91,8 @@
   transform: translateX(50%);
   width: 0;
   height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-
+  border-left: 10px solid rgba(0, 0, 0, 0.2);
+  border-right: 10px solid rgba(0, 0, 0, 0.2);
   border-top: 10px solid white;
 }
 
@@ -95,4 +106,21 @@
   font-size: 16px;
   color: white;
   font-weight: 900;
+}
+
+.plusSign {
+  position: absolute;
+  transform: translate(-12px, -3px);
+}
+
+.minusSign {
+  position: absolute;
+  transform: translate(-9.5px, 3px);
+}
+
+.option-holder {
+  position: absolute;
+  bottom: 0;
+  transform: translateY(30px);
+  width: 70px;
 }

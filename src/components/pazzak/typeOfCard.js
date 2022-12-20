@@ -1,9 +1,13 @@
+import { addOrMinus, double, threeAndSix, twoAndFour } from './cardActions';
+
 export default function TypeOfCard(c) {
   if (typeof c === 'number') {
     let deck = {
       name: 'deck',
       condition: (typeof c === 'number'),
-      color: '#4dd500'
+      color: '#4dd500',
+      sign: '',
+      action: addOrMinus
     }
     return deck;
   } else {
@@ -13,44 +17,51 @@ export default function TypeOfCard(c) {
         name: 'double',
         condition: c.includes('D'),
         color: special,
-        action: ''
+        sign: '',
+        action: double
       },
       {
         name: 'plusAndMinusT',
         condition: c.includes('+-1T'),
         color: special,
         action: '',
-        switch: ''
+        sign: '',
+        switch: addOrMinus
       },
       {
         name: 'twoAndFour',
         condition: c.includes('2 & 4'),
         color: special,
-        action: ''
+        sign: '',
+        action: twoAndFour
       },
       {
         name: 'threeAndSix',
         condition: c.includes('3 & 6'),
         color: special,
-        action: ''
+        sign: '',
+        action: threeAndSix
       },
       {
         name: 'plusAndminus',
         condition: (c.includes('+-') && !(c.includes('T'))),
         color: 'blue',
-        action: ''
+        sign: '+',
+        action: addOrMinus
       },
       {
         name: 'plus',
         condition: (c.includes('+') && !(c.includes('-'))),
         color: 'blue',
-        action: ''
+        sign: '+',
+        action: addOrMinus
       },
       {
         name: 'minus',
         condition: (c.includes('-') && !(c.includes('+'))),
         color: 'red',
-        action: ''
+        sign: '-',
+        action: addOrMinus
       }
     ];
 

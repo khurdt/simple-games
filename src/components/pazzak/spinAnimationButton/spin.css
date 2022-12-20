@@ -1,0 +1,16 @@
+.switchSign {
+
+    cursor: pointer;
+}
+
+.spin {
+    animation: spin 1s infinite;
+}
+
+.sign {}
+
+@keyframes spin {
+    100% {
+        transform: rotate(720deg);
+    }
+}
