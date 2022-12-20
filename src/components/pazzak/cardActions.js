@@ -6,7 +6,7 @@ export const addOrMinus = (c, boardCount) => {
 
 export const double = (c, boardCount) => {
     let lastCard = boardCount.slice(-1);
-    boardCount.push(lastCard);
+    boardCount.push(lastCard[0]);
     return boardCount;
 }
 

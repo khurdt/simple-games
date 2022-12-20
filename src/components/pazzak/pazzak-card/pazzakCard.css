@@ -33,11 +33,11 @@
 }
 
 .signTop {
-  transform: translate(0.3px, -2px);
+  transform: translate(0.5px, -2px);
 }
 
 .signBottom {
-  transform: translate(0.3px, -2px);
+  transform: translate(0px, -1.5px);
 }
 
 .bubbleBottom {
@@ -110,12 +110,12 @@
 
 .plusSign {
   position: absolute;
-  transform: translate(-12px, -3px);
+  transform: translate(-14px, -4px);
 }
 
 .minusSign {
   position: absolute;
-  transform: translate(-9.5px, 3px);
+  transform: translate(-14px, 4px);
 }
 
 .option-holder {

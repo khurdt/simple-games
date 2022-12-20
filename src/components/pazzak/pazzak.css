@@ -9,22 +9,13 @@
   width: 320px;
   height: 50px;
   position: relative;
+  margin-bottom: 10px
 }
 
 .player1-item:nth-child(1) {
   position: absolute;
   left: 25px;
   top: 10px;
-}
-
-.player1-item:nth-child(3) {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  border: 1px solid white;
-  border-radius: 50%;
-  left: 0;
-  transform: translate(-30px, 1px);
 }
 
 .player1-item:nth-child(2) {
@@ -43,10 +34,24 @@
   font-size: 15px;
 }
 
+.player1-item:nth-child(3) {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 1px solid white;
+  border-radius: 50%;
+  left: 0;
+  transform: translate(-30px, 1px);
+  -webkit-box-shadow: inset 0px 0px 13px 2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: inset 0px 0px 13px 2px rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0px 0px 13px 2px rgba(0, 0, 0, 0.75);
+}
+
 .player2 {
   width: 320px;
   height: 50px;
   position: relative;
+  margin-bottom: 10px;
 }
 
 .player2-item:nth-child(1) {
@@ -79,13 +84,29 @@
   border-radius: 50%;
   right: 0;
   transform: translate(30px, 1px);
+  -webkit-box-shadow: inset 0px 0px 13px 2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: inset 0px 0px 13px 2px rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0px 0px 13px 2px rgba(0, 0, 0, 0.75);
 }
 
-/* .player1Board {}
+.player1Board {
+  border: 3px solid rgba(0, 0, 100, 0.3);
+  border-bottom: none;
+  border-top: none;
+  border-radius: 10%;
+  margin: auto;
 
-.player2Board {}
+}
 
-@media all and (max-width: 700px) {
+.player2Board {
+  border: 3px solid rgba(0, 0, 100, 0.3);
+  border-bottom: none;
+  border-top: none;
+  border-radius: 10%;
+  margin: auto;
+}
+
+/* @media all and (max-width: 700px) {
   .player2Board {
     display: none;
   }
@@ -99,7 +120,7 @@
 
 .scoreboard2 {
   position: absolute;
-  transform: translate(290px, 225%);
+  transform: translate(280px, 225%);
 }
 
 

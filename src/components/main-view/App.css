@@ -15,7 +15,8 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 150vh;
+  height: auto;
   font-size: calc(10px + 2vmin);
   color: white;
 }

@@ -1,4 +1,5 @@
 import { addOrMinus, double, threeAndSix, twoAndFour } from './cardActions';
+import { Plus, Minus } from 'react-feather';
 
 export default function TypeOfCard(c) {
   if (typeof c === 'number') {
@@ -46,21 +47,21 @@ export default function TypeOfCard(c) {
         name: 'plusAndminus',
         condition: (c.includes('+-') && !(c.includes('T'))),
         color: 'blue',
-        sign: '+',
+        sign: <Plus width={13} height={13} color={'white'} />,
         action: addOrMinus
       },
       {
         name: 'plus',
         condition: (c.includes('+') && !(c.includes('-'))),
         color: 'blue',
-        sign: '+',
+        sign: <Plus width={13} height={13} color={'white'} />,
         action: addOrMinus
       },
       {
         name: 'minus',
         condition: (c.includes('-') && !(c.includes('+'))),
         color: 'red',
-        sign: '-',
+        sign: <Minus width={13} height={13} color={'white'} />,
         action: addOrMinus
       }
     ];
