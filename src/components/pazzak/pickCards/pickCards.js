@@ -39,13 +39,13 @@ export default function PickCards() {
 
     const removeCard = (card, cardIndex) => {
         if (player1Turn) {
-            cards.unshift(card);
+            cards[cards.indexOf('a')] = card;
             let newArray = player1Cards.filter((e, i) => { return i !== cardIndex });
             newArray.push('a');
             setPlayer1Cards(newArray);
             setRefresh(!refresh);
         } else if (turn === 'player2') {
-            cards.unshift(card);
+            cards[cards.indexOf('a')] = card;
             let newArray = player2Cards.filter((e, i) => { return i !== cardIndex });
             newArray.push('a');
             setPlayer2Cards(newArray);
@@ -53,7 +53,7 @@ export default function PickCards() {
         }
     }
 
-    const handleCards = () => {
+    const pickFourCards = () => {
         if (allSlotsFilled) {
             let p1Hand = [];
             let p2Hand = [];
@@ -145,7 +145,7 @@ export default function PickCards() {
                             }
                             <Button style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }} onClick={() => (player1Turn) ? setTurn('player2') : setTurn('player1')}>End Turn</Button>
                             {allSlotsFilled &&
-                                <Button style={{ maxWidth: '300px', margin: 'auto' }} onClick={() => handleCards()}>Start Game</Button>
+                                <Button style={{ maxWidth: '300px', margin: 'auto' }} onClick={() => pickFourCards()}>Start Game</Button>
                             }
                         </Row>
                         :
@@ -204,7 +204,7 @@ export default function PickCards() {
                             </Col>
                             <Button style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }} onClick={() => (player1Turn) ? setTurn('player2') : setTurn('player1')}>End Turn</Button>
                             {allSlotsFilled &&
-                                <Button style={{ maxWidth: '300px', margin: 'auto' }} onClick={() => handleCards()}>Start Game</Button>
+                                <Button style={{ maxWidth: '300px', margin: 'auto' }} onClick={() => pickFourCards()}>Start Game</Button>
                             }
                         </Row>
                     }

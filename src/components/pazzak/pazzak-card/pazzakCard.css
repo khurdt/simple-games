@@ -33,11 +33,11 @@
 }
 
 .signTop {
-  transform: translate(0.5px, -2px);
+  transform: translate(0.35px, -1.0px);
 }
 
 .signBottom {
-  transform: translate(0px, -1.5px);
+  transform: translate(-0.3px, -0.8px);
 }
 
 .bubbleBottom {

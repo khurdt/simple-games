@@ -51,7 +51,6 @@ export default function Pazzak(props) {
       const j = Math.floor(Math.random() * (i + 1));
       [deck[i], deck[j]] = [deck[j], deck[i]];
     }
-    console.log(deck);
   }
 
   const getCard = () => {
