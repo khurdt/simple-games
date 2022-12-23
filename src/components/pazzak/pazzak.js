@@ -226,7 +226,7 @@ export default function Pazzak(props) {
                 </Col>
               )
             })}
-            <Row className='ml-auto pt-3' style={{ width: '400px', position: 'relative' }}>
+            <Row className='ml-auto pt-3 justify-content-center' style={{ width: '400px', position: 'relative', minHeight: '110px' }}>
               {player1Hand.map((c, i) => {
                 const type = TypeOfCard(c);
                 const option = (type.name === 'plusAndminus' || type.name === 'plusAndMinusT');
@@ -264,7 +264,7 @@ export default function Pazzak(props) {
                 </Col>
               )
             })}
-            <Row className='mr-auto pt-3' style={{ width: '400px', position: 'relative' }}>
+            <Row className='mr-auto pt-3 justify-content-center' style={{ width: '400px', position: 'relative', minHeight: '110px' }}>
               {player2Hand.map((c, i) => {
                 const type = TypeOfCard(c);
                 const option = (type.name === 'plusAndminus' || type.name === 'plusAndMinusT');

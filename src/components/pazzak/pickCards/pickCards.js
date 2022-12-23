@@ -23,34 +23,34 @@ export default function PickCards() {
     const scrollRef = useHorizontalScroll();
     const smartPhone = (window.innerWidth < 850);
 
+
     const addCard = (card, cardIndex) => {
-        if (player1Turn && player1Cards.indexOf('a') > -1 && notPlayedCard) {
-            let index = player1Cards.indexOf('a');
-            player1Cards[index] = card;
-            cards[cardIndex] = `${card}a`;
-            setTurn({ ...turn, played: true });
-            setRefresh(!refresh);
-        } else if (!player1Turn && player2Cards.indexOf('a') > -1 && notPlayedCard) {
-            let index = player2Cards.indexOf('a');
-            player2Cards[index] = card;
-            cards[cardIndex] = `${card}a`;
-            setTurn({ ...turn, played: true });
-            setRefresh(!refresh);
-        }
+        (player1Turn && player1Cards.indexOf('a') > -1 && notPlayedCard) ?
+            setPlayer1Cards(handleAddCard(player1Cards, card, cardIndex)) :
+            (!player1Turn && player2Cards.indexOf('a') > -1 && notPlayedCard) &&
+            setPlayer2Cards(handleAddCard(player2Cards, card, cardIndex));
+    }
+    const handleAddCard = (array, card, cardIndex) => {
+        let index = array.indexOf('a');
+        array[index] = card;
+        cards[cardIndex] = `${card}a`;
+        setTurn({ ...turn, played: true });
+        setRefresh(!refresh);
+        return array;
     }
 
     const removeCard = (card, cardIndex) => {
-        if (player1Turn && !notPlayedCard) {
-            cards[cards.indexOf(`${card}a`)] = card;
-            player1Cards[cardIndex] = 'a';
-            setTurn({ ...turn, played: false });
-            setRefresh(!refresh);
-        } else if (!player1Turn && !notPlayedCard) {
-            cards[cards.indexOf(`${card}a`)] = card;
-            player2Cards[cardIndex] = 'a';
-            setTurn({ ...turn, played: false });
-            setRefresh(!refresh);
-        }
+        (player1Turn && !notPlayedCard) ?
+            setPlayer1Cards(handleRemoveCard(player1Cards, card, cardIndex)) :
+            (!player1Turn && !notPlayedCard) &&
+            setPlayer2Cards(handleRemoveCard(player2Cards, card, cardIndex));
+    }
+    const handleRemoveCard = (array, card, cardIndex) => {
+        cards[cards.indexOf(`${card}a`)] = card;
+        array[cardIndex] = 'a';
+        setTurn({ ...turn, played: false });
+        setRefresh(!refresh);
+        return array;
     }
 
     const endTurn = () => {
@@ -74,9 +74,6 @@ export default function PickCards() {
             filteredCards = filteredCards.filter((c, i) => i !== randomCardIndex);
             setRefresh(!refresh);
         }
-        if (allSlotsFilled) {
-            pickFourCards();
-        }
     }
 
     const pickFourCards = () => {
@@ -88,18 +85,13 @@ export default function PickCards() {
 
             while (p1Hand.length < 4) {
                 let index = Math.floor(Math.random() * (picked1Cards.length - 1));
-                let number = picked1Cards[index];
                 picked1Cards = picked1Cards.filter((c, i) => i !== index);
-                p1Hand.push(number);
-                console.log(p1Hand, picked1Cards);
+                (!p1Hand.includes(picked1Cards[index])) && p1Hand.push(picked1Cards[index]);
             }
-
             while (p2Hand.length < 4) {
                 let index = Math.floor(Math.random() * (picked2Cards.length - 1));
-                let number = picked2Cards[index];
                 picked2Cards = picked2Cards.filter((c, i) => i !== index);
-                p2Hand.push(number);
-                console.log(p2Hand, picked2Cards);
+                (!p2Hand.includes(picked2Cards[index])) && p2Hand.push(picked2Cards[index]);
             }
             if (p1Hand.length === 4 && p2Hand.length === 4) {
                 setPlayer1Cards(p1Hand);
@@ -215,7 +207,7 @@ export default function PickCards() {
                                         <Row className="m-auto" ref={scrollRef} style={{ width: '200px' }}>
                                             {player2Cards.map((c, i) => {
                                                 return (
-                                                    <Col key={i} onClick={() => (turn === 'player2' && c !== 'a') && removeCard(c, i)} style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
+                                                    <Col key={i} onClick={() => (!player1Turn && c !== 'a') && removeCard(c, i)} style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
                                                         <div className='cell'>
                                                             {!c.includes('a') &&
                                                                 <PazzakCard c={c} />
@@ -228,18 +220,21 @@ export default function PickCards() {
                                     </div>
                                 }
                             </Col>
-                            <Button
-                                style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }}
-                                onClick={() => endTurn()}>
-                                End Turn
-                            </Button>
-                            <Button
-                                style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }}
-                                onClick={() => autoPick()}>
-                                Auto Pick
-                            </Button>
-                            {allSlotsFilled &&
+                            {allSlotsFilled ?
                                 <Button style={{ maxWidth: '300px', margin: 'auto' }} onClick={() => pickFourCards()}>Start Game</Button>
+                                :
+                                <>
+                                    <Button
+                                        style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }}
+                                        onClick={() => endTurn()}>
+                                        End Turn
+                                    </Button>
+                                    <Button
+                                        style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }}
+                                        onClick={() => autoPick()}>
+                                        Auto Pick
+                                    </Button>
+                                </>
                             }
                         </Row>
                     }
