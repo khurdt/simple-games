@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -22,6 +22,7 @@ export default function PickCards() {
     const allSlotsFilled = (player1Cards.indexOf('a') === -1 && player2Cards.indexOf('a') === -1);
     const scrollRef = useHorizontalScroll();
     const smartPhone = (window.innerWidth < 850);
+    const childRef = useRef(null);
 
 
     const addCard = (card, cardIndex) => {
@@ -94,8 +95,7 @@ export default function PickCards() {
                 (!p2Hand.includes(picked2Cards[index])) && p2Hand.push(picked2Cards[index]);
             }
             if (p1Hand.length === 4 && p2Hand.length === 4) {
-                setPlayer1Cards(p1Hand);
-                setPlayer2Cards(p2Hand);
+                childRef.current.startGame(p1Hand, p2Hand);
                 setStartGame(true);
             }
         }
@@ -103,7 +103,10 @@ export default function PickCards() {
 
     return (
         <>
-            {startGame ? <Pazzak player1Cards={player1Cards} player2Cards={player2Cards} /> :
+            <Pazzak ref={childRef} />
+            {startGame ?
+                <></>
+                :
                 <>
                     {smartPhone ?
                         <Row className="justify-content-center m-auto" style={{ maxWidth: '850px', display: 'flex', paddingTop: '100px' }}>
