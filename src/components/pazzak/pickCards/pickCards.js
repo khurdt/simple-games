@@ -109,7 +109,7 @@ export default function PickCards() {
                 :
                 <>
                     {smartPhone ?
-                        <Row className="justify-content-center m-auto" style={{ maxWidth: '850px', display: 'flex', paddingTop: '100px' }}>
+                        <Row className="justify-content-center m-auto" style={{ maxWidth: '850px', display: 'flex', paddingTop: '50px' }}>
                             {/* <div className="m-auto" ref={scrollRef} style={{ overflow: "auto", maxWidth: '350px' }}>
                                 <div style={{ whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center', marginLeft: '975px' }}>
                                     {cards.map((c, i) => {
