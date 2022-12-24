@@ -109,7 +109,7 @@ export default function PickCards() {
                 :
                 <>
                     {smartPhone ?
-                        <Row className="justify-content-center m-auto" style={{ maxWidth: '850px', display: 'flex', paddingTop: '50px' }}>
+                        <Row className="justify-content-center m-auto" style={{ maxWidth: '850px', display: 'flex', paddingTop: '10px' }}>
                             {/* <div className="m-auto" ref={scrollRef} style={{ overflow: "auto", maxWidth: '350px' }}>
                                 <div style={{ whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center', marginLeft: '975px' }}>
                                     {cards.map((c, i) => {
@@ -170,7 +170,7 @@ export default function PickCards() {
                             } */}
                         </Row>
                         :
-                        <Row className="justify-content-center m-auto" style={{ display: 'flex', width: '850px', paddingTop: '100px' }}>
+                        <Row className="justify-content-center m-auto" style={{ display: 'flex', width: '850px', paddingTop: '20px' }}>
                             <Col className="mt-5">
                                 <Row className="m-auto justify-content-center" style={{ width: '600px' }}>
                                     {cards.map((c, i) => {

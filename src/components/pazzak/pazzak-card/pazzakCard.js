@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import TypeOfCard from "../typeOfCard";
 import './pazzakCard.css'
 import { Plus, Minus } from 'react-feather'
-import SpinAnimation from "../spinAnimationButton/spin";
 
 export default function PazzakCard(props) {
-  const { c, inGame, isPlus, setIsPlus } = props;
-  const [spin, setSpin] = useState(false);
+  const { c } = props;
 
   const type = TypeOfCard(c);
   const plusAndMinus = type.name === 'plusAndminus';
@@ -58,11 +56,6 @@ export default function PazzakCard(props) {
           <div className="triangleBottom" style={plusAndMinus ? { backgroundColor: 'red' } : { backgroundColor: type.color }}></div>
         </div>
       </div>
-      {(option && inGame) &&
-        <div className="option-holder">
-          <SpinAnimation spin={spin} setSpin={setSpin} setIsPlus={setIsPlus} isPlus={isPlus} />
-        </div>
-      }
     </>
   )
 }

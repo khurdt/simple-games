@@ -184,6 +184,11 @@
   margin: auto;
 }
 
+.option-holder {
+  position: absolute;
+  transform: translate(11px, -11px);
+}
+
 @media all and (max-width: 700px) {
   .board {
     grid-template-columns: 1fr;

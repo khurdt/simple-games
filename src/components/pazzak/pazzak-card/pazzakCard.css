@@ -122,10 +122,3 @@
   position: absolute;
   transform: translate(-14px, 4px);
 }
-
-.option-holder {
-  position: absolute;
-  bottom: 0;
-  transform: translateY(30px);
-  width: 70px;
-}
