@@ -22,7 +22,8 @@ function Pazzak(props, ref) {
     boardCount: [0],
     totalCount: 0,
     hand: [],
-    stand: false
+    stand: false,
+    garauntee: false
   })
   const [player2, setPlayer2] = useState({
     player: 2,
@@ -31,10 +32,11 @@ function Pazzak(props, ref) {
     boardCount: [0],
     totalCount: 0,
     hand: [],
-    stand: false
+    stand: false,
+    garauntee: false
   })
   const [turn, setTurn] = useState({
-    player: '0',
+    player: 0,
     played: false
   });
 
@@ -42,7 +44,9 @@ function Pazzak(props, ref) {
   const scrollRef = useHorizontalScroll();
   const smartPhone = (window.innerWidth < 850);
   const [refresh, setRefresh] = useState(false);
-  const isplayer1Turn = turn.player === '1' || turn.player === '2stand';
+  const isplayer1Turn = turn.player === 1;
+  let currentPlayer = (isplayer1Turn) ? player1 : player2;
+  let otherPlayer = (isplayer1Turn) ? player2 : player1;
   const notPlayedCard = turn.played === false;
   const [deck, setDeck] = useState([]);
 
@@ -52,32 +56,28 @@ function Pazzak(props, ref) {
   }, []);
 
   useImperativeHandle(ref, () => ({
-    startGame(p1Hand, p2Hand) {
-      newDeck().then(() => {
-        setPlayer1({ ...player1, hand: p1Hand });
-        setPlayer2({ ...player2, hand: p2Hand });
+    async startGame(p1Hand, p2Hand) {
+      await newDeck().then(() => {
+        player1.hand = p1Hand;
+        player2.hand = p2Hand;
         setInGame(true);
-        setRefresh(!refresh);
-      }).then(() => {
-        // whoGoesFirst(p1Hand, p2Hand);
+        whoGoesFirst();
       }).catch((error) => console.log(error));
     }
   }));
 
-  const startGame = () => {
-    newDeck().then(() => {
-      setPlayer1({
-        ...player1,
-        board: Array(9).fill('a'),
-        boardCount: [0],
-        totalCount: 0
-      });
-      setPlayer2({
-        ...player2,
-        board: Array(9).fill('a'),
-        boardCount: [0],
-        totalCount: 0
-      });
+  const startGame = async () => {
+    await newDeck().then(() => {
+      player1.board = Array(9).fill('a');
+      player1.boardCount = [0];
+      player1.totalCount = 0;
+      player1.stand = false;
+      player1.garauntee = false;
+      player2.board = Array(9).fill('a');
+      player2.boardCount = [0];
+      player2.totalCount = 0;
+      player2.stand = false;
+      player2.garauntee = false;
       setEndGame(false);
       setRefresh(!refresh);
     }).then(() => whoGoesFirst()).catch((error) => console.log(error));
@@ -108,119 +108,100 @@ function Pazzak(props, ref) {
     return number;
   }
 
-  const whoGoesFirst = () => {
+  const whoGoesFirst = async () => {
     let player1Card = getCard();
     let player2Card = getCard();
     if (player1Card > player2Card) {
-      newDeck().then(() => {
-        setTurn({ ...turn, player: '1' });
-        player1Turn(getCard());
+      await newDeck().then(() => {
+        turn.player = 1;
+        playerTurn(getCard());
       }).catch((error) => console.log(error));
     } else
       if (player1Card < player2Card) {
-        newDeck().then(() => {
-          setTurn({ ...turn, player: '2' });
-          player2Turn(getCard());
+        await newDeck().then(() => {
+          turn.player = 2;
+          playerTurn(getCard());
         }).catch((error) => console.log(error));
       } else if (player1Card === player2Card) { whoGoesFirst(); }
   }
 
-  const player1Turn = (number, cardIndex) => {
-    handlePlayerTurn(number, cardIndex, player1, setPlayer1)
-  }
-
-  const player2Turn = (number, cardIndex) => {
-    handlePlayerTurn(number, cardIndex, player2, setPlayer2)
-  }
-
-  const handlePlayerTurn = (number, cardIndex, player, setPlayer) => {
+  const playerTurn = (number, cardIndex) => {
+    let player = (turn.player === 1) ? player1 : player2;
     const card = TypeOfCard(number);
+
     if (card.name !== 'deck') {
-      setPlayer({
-        ...player,
-        hand: player.hand.filter((c, i) => i !== cardIndex)
-      });
+      const newHand = player.hand.filter((c, i) => i !== cardIndex);
+      player.hand = newHand;
     }
 
-    let newBoardCount = card.action(number, player.boardCount);
-    let total = newBoardCount.reduce((total, a) => total += a, 0);
-    setPlayer({
-      ...player,
-      boardCount: newBoardCount,
-      totalCount: total
-    });
+    const newBoardCount = card.action(number, player.boardCount);
+    const total = newBoardCount.reduce((total, a) => total += a, 0);
+    player.boardCount = newBoardCount;
+    player.totalCount = total;
 
-    let index = player.board.indexOf('a');
+    const index = player.board.indexOf('a');
     player.board[index] = number;
-    setRefresh(!refresh)
+    setRefresh(!refresh);
+    if (total === 20) { handleStand() }
   }
 
-  const checkWin = (player) => {
-    let result;
+  const checkWin = () => {
     return new Promise((resolve, reject) => {
-      handleCheckWin(player).then((result) => {
-        handleResults(result, player).then((result) => {
-          result = result;
+      handleCheckWin().then((result) => {
+        handleResults(result).then((result) => {
+          console.log(result);
         }).catch((error) => console.log(error));
       }).catch((error) => console.log(error));
-      resolve(result);
+      resolve();
     })
   }
 
-  const handleCheckWin = (player) => {
+  const handleCheckWin = () => {
     return new Promise((resolve, reject) => {
-      let conditions = conditionsArray(player, player1, player2);
+      let conditions = conditionsArray(isplayer1Turn, player1, player2);
       for (let i = 0; i < conditions.length; i++) {
         (conditions[i].condition) && resolve(conditions[i].name);
       }
     });
   }
 
-  const handleResults = (result, player) => {
+  const handleResults = (result) => {
     return new Promise((resolve, reject) => {
-      let responses = conditionResponseArray(player, player1, player2, setPlayer1, setPlayer2, setEndGame, setRefresh, refresh);
+      let responses = conditionResponseArray(isplayer1Turn, player1, player2, setPlayer1, setPlayer2, setEndGame, setRefresh, refresh, handleStand);
       for (let i = 0; i < responses.length; i++) {
         if (responses[i].name === result) {
           responses[i].action();
           resolve(responses[i].name);
         }
       }
-    })
+    });
   }
 
   const playFromHand = (c, i, option) => {
     setTurn({ ...turn, played: true });
     let plus = `+${c.slice(2, 3)}`;
     let minus = `-${c.slice(2, 3)}`;
-    if (isplayer1Turn && option) {
-      let findSign = optionSign.find((e) => e.index === i && e.player === 1);
-      player1Turn(((findSign.isPlus) ? plus : minus), i)
-    } else if (isplayer1Turn) {
-      player1Turn(c, i);
-    } else if (!isplayer1Turn && option) {
-      let findSign = optionSign.find((e) => e.index === i && e.player === 2);
-      player2Turn(((findSign.isPlus) ? plus : minus), i)
-    } else if (!isplayer1Turn) {
-      player2Turn(c, i);
+    const winIfTie = (c.includes('T'));
+    if (option) {
+      if (winIfTie) { currentPlayer.garauntee = winIfTie }
+      let findSign = optionSign.find((e) => e.index === i && e.player === currentPlayer.player);
+      playerTurn(((findSign.isPlus) ? plus : minus), i)
+    } else {
+      playerTurn(c, i);
     }
   }
 
-  const endTurn = () => {
-    let player = (isplayer1Turn) ? (player1) : (player2);
-    checkWin(player).then((result) => {
+  const handleStand = () => {
+    currentPlayer.stand = true;
+    endTurn();
+  }
+
+  const endTurn = async () => {
+    await checkWin().then((result) => {
       if (!endGame) {
-        if (isplayer1Turn && !player2.stand) {
-          setTurn({ player: '2', played: false });
-          player2Turn(getCard());
-        } else if (!isplayer1Turn && !player1.stand) {
-          setTurn({ player: '1', played: false });
-          player1Turn(getCard());
-        } else if (player1.stand) {
-          setTurn({ ...turn, played: false });
-          player2Turn(getCard());
-        } else if (player2.stand) {
-          setTurn({ ...turn, played: false });
-          player1Turn(getCard());
+        if (!otherPlayer.stand) {
+          turn.player = otherPlayer.player;
+          playerTurn(getCard());
         }
       }
     }).catch((error) => console.log(error))
@@ -276,11 +257,18 @@ function Pazzak(props, ref) {
           </Row>
           <div style={{ height: '70px', textAlign: 'center' }}>
             {(!endGame && isplayer1Turn) &&
-              <Button
-                style={{ width: '200px', textAlign: 'center', marginTop: '30px', marginLeft: 'auto', marginRight: 'auto', }}
-                onClick={() => endTurn()}>
-                End Turn
-              </Button>
+              <>
+                <Button
+                  style={{ width: '100px', textAlign: 'center', marginTop: '30px', marginLeft: 'auto', marginRight: '5px', }}
+                  onClick={() => endTurn()}>
+                  End Turn
+                </Button>
+                <Button
+                  style={{ width: '100px', textAlign: 'center', marginTop: '30px', marginLeft: '5px', marginRight: 'auto', }}
+                  onClick={() => handleStand()}>
+                  Stand
+                </Button>
+              </>
             }
           </div>
         </Row>
@@ -329,11 +317,18 @@ function Pazzak(props, ref) {
           </Row>
           <div style={{ height: '70px', textAlign: 'center' }}>
             {(!endGame && !isplayer1Turn) &&
-              <Button
-                style={{ width: '200px', textAlign: 'center', marginTop: '30px', marginLeft: 'auto', marginRight: 'auto', }}
-                onClick={() => endTurn()}>
-                End Turn
-              </Button>
+              <>
+                <Button
+                  style={{ width: '100px', textAlign: 'center', marginTop: '30px', marginLeft: 'auto', marginRight: '5px', }}
+                  onClick={() => endTurn()}>
+                  End Turn
+                </Button>
+                <Button
+                  style={{ width: '100px', textAlign: 'center', marginTop: '30px', marginLeft: '5px', marginRight: 'auto', }}
+                  onClick={() => handleStand()}>
+                  Stand
+                </Button>
+              </>
             }
           </div>
         </Row>
@@ -346,7 +341,6 @@ function Pazzak(props, ref) {
           :
           <>
             <div style={{ maxWidth: '200px', textAlign: 'center', margin: '30px' }}></div>
-            <Button onClick={() => whoGoesFirst()}>Who Goes First</Button>
           </>
         }
       </Row>

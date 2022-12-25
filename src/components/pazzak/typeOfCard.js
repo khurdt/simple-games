@@ -27,7 +27,7 @@ export default function TypeOfCard(c) {
         color: special,
         action: '',
         sign: '',
-        switch: addOrMinus
+        action: addOrMinus
       },
       {
         name: 'twoAndFour',

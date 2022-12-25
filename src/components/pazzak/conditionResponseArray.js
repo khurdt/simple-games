@@ -1,5 +1,5 @@
-export default function conditionResponseArray(player, player1, player2, setPlayer1, setPlayer2, setEndGame, setRefresh, refresh) {
-
+export default function conditionResponseArray(isplayer1Turn, player1, player2, setPlayer1, setPlayer2, setEndGame, setRefresh, refresh, handleStand) {
+  let player = (isplayer1Turn) ? player1 : player2;
   const filledSlots = () => {
     player.score.push(1);
     setEndGame(true);
@@ -7,9 +7,7 @@ export default function conditionResponseArray(player, player1, player2, setPlay
   }
 
   const twenty = () => {
-    (player.player === 1) ?
-      setPlayer1({ ...player1, stand: true }) :
-      setPlayer2({ ...player2, stand: true });
+    handleStand();
   }
 
   const broke = () => {
