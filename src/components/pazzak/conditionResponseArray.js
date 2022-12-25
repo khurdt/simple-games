@@ -1,19 +1,12 @@
-export default function conditionResponseArray(isplayer1Turn, player1, player2, setPlayer1, setPlayer2, setEndGame, setRefresh, refresh, handleStand) {
-  let player = (isplayer1Turn) ? player1 : player2;
+export default function conditionResponseArray(currentPlayer, otherPlayer, player1, player2, endTheGame) {
   const filledSlots = () => {
-    player.score.push(1);
-    setEndGame(true);
-    setRefresh(!refresh);
-  }
-
-  const twenty = () => {
-    handleStand();
+    currentPlayer.score.push(1);
+    endTheGame();
   }
 
   const broke = () => {
-    (player.player === 1) ? player2.score.push(1) : player1.score.push(1);
-    setEndGame(true);
-    setRefresh(!refresh);
+    otherPlayer.score.push(1);
+    endTheGame();
   }
 
   const under = () => {
@@ -21,20 +14,17 @@ export default function conditionResponseArray(isplayer1Turn, player1, player2, 
   }
 
   const tied = () => {
-    setEndGame(true);
-    setRefresh(!refresh);
+    endTheGame();
   }
 
   const player1Win = () => {
     player1.score.push(1);
-    setEndGame(true);
-    setRefresh(!refresh);
+    endTheGame();
   }
 
   const player2Win = () => {
     player2.score.push(1);
-    setEndGame(true);
-    setRefresh(!refresh);
+    endTheGame();
   }
 
   const responses = [
@@ -45,10 +35,6 @@ export default function conditionResponseArray(isplayer1Turn, player1, player2, 
     {
       name: 'under',
       action: under
-    },
-    {
-      name: '20',
-      action: twenty
     },
     {
       name: 'filledSlots',

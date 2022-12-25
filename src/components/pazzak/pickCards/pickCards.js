@@ -55,10 +55,15 @@ export default function PickCards() {
     }
 
     const endTurn = () => {
-        (player1Turn) ?
-            setTurn({ player: '2', played: false }) :
-            setTurn({ player: '1', played: false });
-        // (allSlotsFilled) && pickFourCards();
+        if (player1Turn) {
+            turn.player = '2';
+            turn.played = false;
+            setRefresh(!refresh);
+        } else {
+            turn.player = '1';
+            turn.played = false;
+            setRefresh(!refresh);
+        }
     }
 
     const autoPick = () => {
@@ -108,74 +113,13 @@ export default function PickCards() {
                 <></>
                 :
                 <>
-                    {smartPhone ?
-                        <Row className="justify-content-center m-auto" style={{ maxWidth: '850px', display: 'flex', paddingTop: '10px' }}>
-                            {/* <div className="m-auto" ref={scrollRef} style={{ overflow: "auto", maxWidth: '350px' }}>
-                                <div style={{ whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center', marginLeft: '975px' }}>
+                    <Row className="justify-content-center m-auto" style={{ maxWidth: '800px', display: 'flex', paddingTop: '10px' }}>
+                        <Col className="mt-5" xs={smartPhone ? 12 : 8} sm={smartPhone ? 12 : 8} md={smartPhone ? 12 : 8} >
+                            <div className='container' ref={scrollRef}>
+                                <div className="child">
                                     {cards.map((c, i) => {
                                         return (
-                                            <Col key={i} style={{ flexFlow: 'nowrap !important', cursor: 'pointer', margin: '10px', width: '70px' }}>
-                                                <div className='cell' onClick={() => addCard(c, i)}>
-                                                    {(c !== 'a') &&
-                                                        <PazzakCard c={c} />
-                                                    }
-                                                </div>
-                                            </Col>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                            {player1Turn ?
-                                <div>
-                                    <h3 className="text-center">Player 1 Hand</h3>
-                                    <div className="m-auto" ref={scrollRef} style={{ overflow: "auto", maxWidth: '350px' }}>
-                                        <div style={{ whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center', marginLeft: '450px' }}>
-                                            {player1Cards.map((c, i) => {
-                                                return (
-                                                    <Col key={i} onClick={() => ((player1Turn) && c !== 'a') && removeCard(c, i)} style={{ flexFlow: 'nowrap !important', cursor: 'pointer', margin: '10px', width: '70px' }}>
-                                                        <div className='cell'>
-                                                            {(c !== 'a') &&
-                                                                <PazzakCard c={c} />
-                                                            }
-                                                        </div>
-                                                    </Col>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
-                                </div>
-                                :
-                                <div>
-                                    <h3 className="text-center">Player 2 Hand</h3>
-                                    <div className="m-auto" ref={scrollRef} style={{ overflow: "auto", maxWidth: '350px' }}>
-                                        <div style={{ whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center', marginLeft: '450px' }}>
-                                            {player2Cards.map((c, i) => {
-                                                return (
-                                                    <Col key={i} onClick={() => (turn === 'player2' && c !== 'a') && removeCard(c, i)} style={{ flexFlow: 'nowrap !important', cursor: 'pointer', margin: '10px', width: '70px' }}>
-                                                        <div className='cell'>
-                                                            {(c !== 'a') &&
-                                                                <PazzakCard c={c} />
-                                                            }
-                                                        </div>
-                                                    </Col>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                            <Button style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }} onClick={() => (player1Turn) ? setTurn('player2') : setTurn('player1')}>End Turn</Button>
-                            {allSlotsFilled &&
-                                <Button style={{ maxWidth: '300px', margin: 'auto' }} onClick={() => pickFourCards()}>Start Game</Button>
-                            } */}
-                        </Row>
-                        :
-                        <Row className="justify-content-center m-auto" style={{ display: 'flex', width: '850px', paddingTop: '20px' }}>
-                            <Col className="mt-5">
-                                <Row className="m-auto justify-content-center" style={{ width: '600px' }}>
-                                    {cards.map((c, i) => {
-                                        return (
-                                            <Col key={i} style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
+                                            <Col key={i} className='childCards'>
                                                 <div className='cell' onClick={() => addCard(c, i)}>
                                                     {(!c.includes('a')) &&
                                                         <PazzakCard c={c} />
@@ -184,45 +128,45 @@ export default function PickCards() {
                                             </Col>
                                         )
                                     })}
-                                </Row>
-                            </Col>
-                            <Col>
-                                {player1Turn ?
-                                    <div>
-                                        <h3 className="text-center">Player 1 Hand</h3>
-                                        <Row className="m-auto" style={{ width: '200px' }}>
-                                            {player1Cards.map((c, i) => {
-                                                return (
-                                                    <Col key={i} onClick={() => ((player1Turn) && c !== 'a') && removeCard(c, i)} style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
-                                                        <div className='cell'>
-                                                            {!c.includes('a') &&
-                                                                <PazzakCard c={c} />
-                                                            }
-                                                        </div>
-                                                    </Col>
-                                                )
-                                            })}
-                                        </Row>
-                                    </div>
-                                    :
-                                    <div>
-                                        <h3 className="text-center">Player 2 Hand</h3>
-                                        <Row className="m-auto" ref={scrollRef} style={{ width: '200px' }}>
-                                            {player2Cards.map((c, i) => {
-                                                return (
-                                                    <Col key={i} onClick={() => (!player1Turn && c !== 'a') && removeCard(c, i)} style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
-                                                        <div className='cell'>
-                                                            {!c.includes('a') &&
-                                                                <PazzakCard c={c} />
-                                                            }
-                                                        </div>
-                                                    </Col>
-                                                )
-                                            })}
-                                        </Row>
-                                    </div>
-                                }
-                            </Col>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="mt-2" xs={smartPhone ? 12 : 4} sm={smartPhone ? 12 : 4} md={smartPhone ? 12 : 4}>
+                            <h3 className="text-center">{turn.player === '1' ? 'Player 1 Hand' : 'Player 2 Hand'}</h3>
+                            <div className='container' ref={scrollRef}>
+                                <div className="child hand">
+                                    {player1Cards.map((c, i) => {
+                                        return (
+                                            <Col key={i}
+                                                style={turn.player === '1' ? { display: 'flex' } : { display: 'none' }}
+                                                className={turn.player === '1' ? 'childCards animation' : 'childCards'}
+                                                onClick={() => ((player1Turn) && c !== 'a') && removeCard(c, i)} >
+                                                <div className='cell'>
+                                                    {!c.includes('a') &&
+                                                        <PazzakCard c={c} />
+                                                    }
+                                                </div>
+                                            </Col>
+                                        )
+                                    })}
+                                    {player2Cards.map((c, i) => {
+                                        return (
+                                            <Col key={i}
+                                                style={turn.player === '2' ? { display: 'flex' } : { display: 'none' }}
+                                                className={turn.player === '2' ? 'childCards animation' : 'childCards'}
+                                                onClick={() => (!player1Turn && c !== 'a') && removeCard(c, i)} >
+                                                <div className='cell'>
+                                                    {!c.includes('a') &&
+                                                        <PazzakCard c={c} />
+                                                    }
+                                                </div>
+                                            </Col>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="m-auto" xs={12} sm={12} md={12} style={{ width: 'auto', paddingTop: '20px' }}>
                             {allSlotsFilled ?
                                 <Button style={{ maxWidth: '300px', margin: 'auto' }} onClick={() => pickFourCards()}>Start Game</Button>
                                 :
@@ -239,8 +183,8 @@ export default function PickCards() {
                                     </Button>
                                 </>
                             }
-                        </Row>
-                    }
+                        </Col>
+                    </Row>
                 </>
             }
         </>
