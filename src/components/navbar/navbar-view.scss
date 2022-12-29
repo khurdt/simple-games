@@ -2,3 +2,56 @@
     border-top: 1px solid rgba($color: #464545, $alpha: 1.0);
     border-bottom: 1px solid rgba($color: #464545, $alpha: 1.0);
 }
+
+.menu {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    z-index: 9999999999 !important;
+}
+
+.off-canvas-container {
+    transition: ease;
+    opacity: 0;
+    transform: translateX(250%);
+    position: fixed;
+    right: 3%;
+    top: 3%;
+    z-index: 10000000 !important;
+}
+
+.off-canvas-body {
+    color: white;
+    height: fit-content;
+    width: 80px;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.off-canvas-container.show {
+    animation: slide-left 0.35s ease forwards;
+}
+
+.off-canvas-container.hide {
+    animation: slide-right 0.35s ease forwards;
+}
+
+@keyframes slide-left {
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-right {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(250%);
+        opacity: 0;
+    }
+}

@@ -1,52 +1,64 @@
-import React from 'react';
-import './navbar-view.scss';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../images/logo.svg';
-import { Navbar, Nav } from 'react-bootstrap';
+// import logo from '../../images/logo.svg';
+import Nav from 'react-bootstrap/Nav';
+import { ChevronRight, Home, Menu } from 'react-feather';
+import './navbar-view.scss';
 
-class Menu extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            pageActive: ''
-        };
+export default function Navigation() {
+    const [pageActive, setPageActive] = useState('');
+    const [showNavBar, setShowNavBar] = useState('initial');
+
+    const handleClose = () => setShowNavBar('false');
+    const handleShow = () => setShowNavBar('true');
+
+    useEffect(() => {
+        if (window.location.href.includes('user')) { setPageActive('user') }
+        else if (window.location.href.includes('login')) { setPageActive('login') }
+        else if (window.location.href.includes('register')) { setPageActive('register') }
+        else { setPageActive('home') };
+    }, [])
+
+    // onLoggedOut = () => {
+    //     localStorage.clear();
+    //     window.open('/', '_self');
+    // }
+
+    const homeTab = {
+        color: 'white'
     }
 
-    componentDidMount() {
-        if (window.location.href.includes('user')) { this.setState({ pageActive: 'user' }) }
-        else if (window.location.href.includes('login')) { this.setState({ pageActive: 'login' }) }
-        else if (window.location.href.includes('register')) { this.setState({ pageActive: 'register' }) }
-        else { this.setState({ pageActive: 'home' }) };
-    }
-
-    onLoggedOut = () => {
-        localStorage.clear();
-        window.open('/', '_self');
-    }
-
-    render() {
-
-        let homeIcon = {
-            color: 'white',
-            borderBottom: (!(window.location.href.includes('tictactoe' || 'login' || 'register'))) ? '2px solid #1266F1' : '0px'
-        };
-        // let userIcon = {
-        //     color: 'white',
-        //     borderBottom: (pageActive === 'user' || window.location.href.includes('tictactoe')) ? '2px solid #1266F1' : '0px'
-        // };
-
-        return (
-            <>
-                <Navbar style={{ backgroundColor: '#1E2127', height: '56px', margin: '0', padding: '0', zIndex: '100' }}>
-                    <Navbar.Brand style={{ color: '#61dafb', fontSize: '20px' }}><img src={logo} className="App-logo" alt="logo" /><span>React Games</span></Navbar.Brand>
-                    <Nav className='ml-auto' style={{ backgroundColor: '#1E2127', padding: '5px', display: 'flex' }}>
-                        <Nav.Link className='text-center' as={Link} onClick={() => { this.setState({ pageActive: 'home' }) }} style={homeIcon} to='/'>Games</Nav.Link>
-                        {/* <Nav.Link className='text-center' as={Link} onClick={() => { this.setState({ pageActive: 'tictactoe' }) }} style={userIcon} to='/tictactoe'>Tic Tac Toe</Nav.Link> */}
+    return (
+        <>
+            <div className="menu">
+                <div>
+                    {(showNavBar === 'false' || showNavBar === 'initial') &&
+                        <Menu
+                            color='white'
+                            style={{ width: '30px', height: '30px' }}
+                            onClick={handleShow}
+                            alt='menu icon' />
+                    }
+                </div>
+            </div>
+            <div className={(showNavBar === 'initial') ? 'off-canvas-container' :
+                (showNavBar === 'true') ? 'off-canvas-container show' :
+                    (showNavBar === 'false') && 'off-canvas-container hide'}>
+                <div className='off-canvas-body' style={{ backgroundColor: 'black' }}>
+                    <Nav>
+                        <Nav.Link className='offcanvas_item' style={homeTab} as={Link} to='/' onClick={() => { handleClose(); setPageActive('home') }}>
+                            <Home width={20} height={20} alt='home icon' />
+                            <div className='offcanvas-item-title'>Home</div>
+                        </Nav.Link>
                     </Nav>
-                </Navbar>
-            </>
-        );
-    }
-}
 
-export default Menu;
+                    <ChevronRight
+                        color='white'
+                        style={{ width: '30px', height: '30px', marginTop: '20px', marginBottom: '15px', cursor: 'pointer' }}
+                        onClick={handleClose}
+                        alt='exit icon' />
+                </div>
+            </div>
+        </>
+    );
+}

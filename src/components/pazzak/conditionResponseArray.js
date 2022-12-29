@@ -1,12 +1,14 @@
 export default function conditionResponseArray(currentPlayer, otherPlayer, player1, player2, endTheGame) {
   const filledSlots = () => {
     currentPlayer.score.push(1);
-    endTheGame();
+    let result = 'won the set'
+    endTheGame(result, currentPlayer.player);
   }
 
   const broke = () => {
     otherPlayer.score.push(1);
-    endTheGame();
+    let result = 'won the set'
+    endTheGame(result, otherPlayer.player);
   }
 
   const under = () => {
@@ -14,17 +16,20 @@ export default function conditionResponseArray(currentPlayer, otherPlayer, playe
   }
 
   const tied = () => {
-    endTheGame();
+    let result = 'tied the set';
+    endTheGame(result);
   }
 
   const player1Win = () => {
     player1.score.push(1);
-    endTheGame();
+    let result = 'won the set';
+    endTheGame(result, player1.player);
   }
 
   const player2Win = () => {
     player2.score.push(1);
-    endTheGame();
+    let result = 'won the set';
+    endTheGame(result, player2.player);
   }
 
   const responses = [

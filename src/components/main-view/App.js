@@ -1,18 +1,18 @@
 import React from 'react';
 import TicTacToeIntro from '../tictactoe/ticTacToeIntro';
-import Menu from '../navbar/navbar';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import './App.css';
 import { Row, Col, Container, Card } from 'react-bootstrap';
 import TicTacToeImg from '../../images/tictactoeimg.png';
 import PickCards from '../pazzak/pickCards/pickCards';
+import Navigation from '../navbar/navbar';
 
 export default function App() {
   let navigate = useNavigate();
 
   return (
     <>
-      <Menu />
+      <Navigation />
       <div className="App-header">
         <Routes>
           <Route
@@ -44,7 +44,7 @@ export default function App() {
             }
           />
           <Route path="tictactoe" element={<TicTacToeIntro onBackClick={() => navigate(-1)} />} />
-          <Route path="pazzak" element={<PickCards onBackClick={() => navigate(-1)} />} />
+          <Route path="pazzak" element={<PickCards onBackClick={() => navigate(-1)} navigate={navigate} />} />
         </Routes>
       </div>
     </>

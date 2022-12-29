@@ -7,7 +7,8 @@ import { useHorizontalScroll } from "../useSideScroll";
 import Pazzak from "../pazzak";
 import './pickCards.css';
 
-export default function PickCards() {
+export default function PickCards(props) {
+    const { navigate } = props;
     const [cards, setCards] = useState(['+1', '+2', '+3', '+4', '+5', '+6', '-1', '-2', '-3', '-4', '-5', '-6', '+-1', '+-2', '+-3', '+-4', '+-5', '+-6', 'D', '+-1T', '2 & 4', '3 & 6']);
     const [startGame, setStartGame] = useState(false);
     const [player1Cards, setPlayer1Cards] = useState(Array(10).fill('a'));
@@ -108,7 +109,7 @@ export default function PickCards() {
 
     return (
         <>
-            <Pazzak ref={childRef} />
+            <Pazzak ref={childRef} navigate={navigate} />
             {startGame ?
                 <></>
                 :

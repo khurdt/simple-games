@@ -5,6 +5,17 @@
   justify-content: center;
 }
 
+.game-container {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  margin: auto;
+  max-width: 800px;
+  height: auto;
+  padding-top: 30px;
+}
+
 .player1 {
   width: 320px;
   height: 50px;
@@ -106,6 +117,10 @@
   margin: auto;
 }
 
+.hide {
+  opacity: 1;
+}
+
 /* @media all and (max-width: 700px) {
   .player2Board {
     display: none;
@@ -116,11 +131,13 @@
   position: absolute;
   left: 0;
   transform: translate(-40px, 225%);
+  width: 30px;
 }
 
 .scoreboard2 {
   position: absolute;
-  transform: translate(280px, 225%);
+  transform: translate(290px, 225%);
+  width: 30px;
 }
 
 
@@ -131,6 +148,9 @@
   height: 20px;
   border: 1px solid white;
   border-radius: 50%;
+  -webkit-box-shadow: inset 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: inset 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
 }
 
 .cardTable {
@@ -189,6 +209,40 @@
   transform: translate(11px, -11px);
 }
 
+.endGameModal {
+  position: fixed;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -55%);
+  width: 250px;
+  height: 100px;
+  border: 1px solid white;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  z-index: 999;
+  text-align: center;
+  font-size: 15px;
+  padding: 10px;
+}
+
+.customButton {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  border: 1px solid white;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: rgba(57, 57, 57, 0.75);
+}
+
+.customButton:hover {
+  background-color: rgba(103, 103, 103, 0.75);
+}
+
 @media all and (max-width: 700px) {
   .board {
     grid-template-columns: 1fr;
@@ -196,5 +250,26 @@
 
   .playersCards {
     grid-template-columns: 1fr;
+  }
+
+  .game-container {
+    display: block;
+    width: fit-content;
+    max-width: min-content;
+    padding-left: 60px;
+    height: auto;
+    padding-top: 30px;
+  }
+
+  .playersCards {
+    width: fit-content;
+    margin: auto;
+    grid-template-columns: 100%;
+    padding: 0;
+  }
+
+  .scoreboard2 {
+    left: 0;
+    transform: translate(-40px, 225%);
   }
 }
