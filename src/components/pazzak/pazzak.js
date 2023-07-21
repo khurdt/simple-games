@@ -241,7 +241,7 @@ function Pazzak(props, ref) {
   return (
     <>
       {endGame &&
-        <div className='endGameModal'>{endGameModal.player} {endGameModal.result}
+        <div className='endGameModal'>Player {endGameModal.player} {endGameModal.result}
           <div onClick={startGame} style={{ width: '150px', marginTop: '10px', paddingTop: '3px' }} className='customButton'>OK</div>
         </div>
       }

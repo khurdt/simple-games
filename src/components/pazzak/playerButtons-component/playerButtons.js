@@ -8,7 +8,7 @@ export default function PlayerButtons(props) {
 
   return (
     <>
-      {open !== 'true' &&
+      {/* {open !== 'true' &&
         <div className={(open === 'initial') ? 'actionButton actionOpen' :
           (open === 'false') ? 'actionButton actionClose' : ''} onClick={() => setOpen('true')}>
           <ChevronLeft />
@@ -33,6 +33,18 @@ export default function PlayerButtons(props) {
           Stand
         </div>
         <ChevronRight style={{ cursor: 'pointer', marginTop: '3px' }} onClick={() => setOpen('false')} />
+      </div> */}
+      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '40px' }}>
+        <div
+          style={{ width: '100px' }} className='customButton'
+          onClick={() => endTurn()}>
+          End Turn
+        </div>
+        <div
+          style={{ width: '100px' }} className='customButton'
+          onClick={() => handleStand()}>
+          Stand
+        </div>
       </div>
     </>
   )

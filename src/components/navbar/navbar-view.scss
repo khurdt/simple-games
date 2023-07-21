@@ -1,6 +1,7 @@
 .submenu {
     border-top: 1px solid rgba($color: #464545, $alpha: 1.0);
     border-bottom: 1px solid rgba($color: #464545, $alpha: 1.0);
+    border-radius: 10px;
 }
 
 .menu {
@@ -35,6 +36,15 @@
 
 .off-canvas-container.hide {
     animation: slide-right 0.35s ease forwards;
+}
+
+@media all and (max-width: 700px) {
+    .menu {
+        position: fixed;
+        top: 10px;
+        right: 20px;
+    }
+
 }
 
 @keyframes slide-left {

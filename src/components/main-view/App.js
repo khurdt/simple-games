@@ -6,6 +6,7 @@ import { Row, Col, Container, Card } from 'react-bootstrap';
 import TicTacToeImg from '../../images/tictactoeimg.png';
 import PickCards from '../pazzak/pickCards/pickCards';
 import Navigation from '../navbar/navbar';
+import PazzakCard from '../pazzak/pazzak-card/pazzakCard';
 
 export default function App() {
   let navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function App() {
               <Container fluid style={{ margin: '0', padding: '0' }}>
                 <Container style={{ paddingTop: '100px' }}>
                   <Row className='m-auto'>
-                    <Col className='m-auto' xs={12} sm={12} md={4}>
+                    <Col className='m-auto p-4' xs={12} sm={12} md={4}>
                       <Card className='m-auto' style={{ width: '250px', height: '200px', backgroundColor: '#282c34', border: 'none', margin: 'auto' }}>
                         <Link to='tictactoe' style={{ textDecoration: 'none' }}>
                           <Card.Title className='title'>Tic Tac Toe</Card.Title>
@@ -30,11 +31,15 @@ export default function App() {
                         </Link>
                       </Card>
                     </Col>
-                    <Col className='m-auto' xs={12} sm={12} md={4}>
-                      <Card className='m-auto' style={{ width: '250px', height: '200px', backgroundColor: '#282c34', border: 'none', margin: 'auto' }}>
+                    <Col className='m-auto p-4' xs={12} sm={12} md={4}>
+                      <Card className='m-auto' style={{ width: '250px', height: '200px', backgroundColor: '#282c34', border: 'none', margin: 'auto', display: 'flex' }}>
                         <Link to='pazzak' style={{ textDecoration: 'none' }}>
                           <Card.Title className='title'>Pazzak</Card.Title>
-                          {/* <Card.Img style={{ height: '200px' }}></Card.Img> */}
+                          <div className='pazzakCardsTitle'>
+                            <PazzakCard c={'+1'} className='pazzakCardTitle' />
+                            <PazzakCard c={'-1'} className='pazzakCardTitle' />
+                            <PazzakCard c={'+-1T'} className='pazzakCardTitle' />
+                          </div>
                         </Link>
                       </Card>
                     </Col>
