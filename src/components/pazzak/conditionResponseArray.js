@@ -32,6 +32,10 @@ export default function conditionResponseArray(currentPlayer, otherPlayer, playe
     endTheGame(result, player2.player);
   }
 
+  const twenty = () => {
+
+  }
+
   const responses = [
     {
       name: 'broke',
@@ -57,6 +61,10 @@ export default function conditionResponseArray(currentPlayer, otherPlayer, playe
       name: 'player2',
       action: player2Win
     },
+    {
+      name: '20',
+      action: twenty
+    }
   ]
   return responses;
 }

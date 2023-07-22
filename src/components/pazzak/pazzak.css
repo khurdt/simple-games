@@ -243,6 +243,41 @@
   background-color: rgba(103, 103, 103, 0.75);
 }
 
+.playerStatus {
+  visibility: hidden;
+}
+
+.otherPlayerCount {
+  text-align: center;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  color: white;
+  border-radius: 50%;
+  margin: auto;
+  color: black;
+  font-size: 15px;
+}
+
+.tinyGreenCard {
+  width: 10px;
+  height: 15px;
+  background-color: #4dd500;
+  margin-top: 6px;
+  border: 1px solid white;
+  border-radius: 2px;
+}
+
+.tinyHandCard {
+  width: 10px;
+  height: 15px;
+  background-color: blue;
+  margin-top: 6px;
+  border: 1px solid white;
+  border-radius: 2px;
+}
+
 @media all and (max-width: 700px) {
   .board {
     grid-template-columns: 1fr;
@@ -250,6 +285,10 @@
 
   .playersCards {
     grid-template-columns: 1fr;
+  }
+
+  .playerStatus {
+    visibility: visible;
   }
 
   .game-container {

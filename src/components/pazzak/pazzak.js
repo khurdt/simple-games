@@ -104,18 +104,20 @@ function Pazzak(props, ref) {
 
   const newDeck = () => {
     return new Promise((resolve, reject) => {
-      let deck = [];
+      let temporarydeck = [];
       let cards = Array.from(Array(11).keys()).slice(1);
       for (let i = 0; i < 4; i++) {
-        deck = [...deck].concat(...cards);
+        temporarydeck = [...temporarydeck].concat(...cards);
       }
-      for (let i = deck.length - 1; i > 0; i--) {
+      for (let i = temporarydeck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
+        [temporarydeck[i], temporarydeck[j]] = [temporarydeck[j], temporarydeck[i]];
       }
-      if (deck.length === 40) {
-        setDeck(deck);
-        resolve(deck);
+      if (temporarydeck.length === 40) {
+        setDeck(temporarydeck);
+        if (deck.length === 40) {
+          resolve(temporarydeck);
+        }
       };
     })
   }
@@ -172,9 +174,9 @@ function Pazzak(props, ref) {
       handleCheckWin().then((result) => {
         handleResults(result).then((result) => {
           console.log(result);
+          resolve(result);
         }).catch((error) => console.log(error));
       }).catch((error) => console.log(error));
-      resolve();
     });
   }
 
@@ -223,7 +225,9 @@ function Pazzak(props, ref) {
 
   const endTurn = async () => {
     await checkWin().then((result) => {
-      if (!endGame) {
+      console.log(result);
+      let conditionsArray = ['under', '20']
+      if (!endGame && conditionsArray.includes(result)) {
         if (!otherPlayer.stand) {
           turn.player = otherPlayer.player;
           turn.played = false;
@@ -350,6 +354,39 @@ function Pazzak(props, ref) {
             }
           </div>
         </Row>
+      </div>
+      <div className='playerStatus' style={{ display: 'flex', padding: '10px', marginTop: '20px' }}>
+        {isplayer1Turn ?
+          <>
+            <div>Player 2:</div>
+            <div className='otherPlayerCount'>{player2.totalCount}</div>
+            <div style={{ margin: 'auto' }}>{player2.boardCount.length - 1}/9</div>
+            <div style={{ margin: 'auto' }}>{player2.hand.length}/4</div>
+            <div style={{ display: 'flex' }}>
+              <div className="bubble" style={(player2.score.length > 0) ? { backgroundColor: 'red' } : {}}></div>
+              <div className="bubble" style={(player2.score.length > 1) ? { backgroundColor: 'red' } : {}}></div>
+              <div className="bubble" style={(player2.score.length > 2) ? { backgroundColor: 'red' } : {}}></div>
+            </div>
+          </>
+          :
+          <>
+            <div >Player 1:</div>
+            <div className='otherPlayerCount'>{player1.totalCount}</div>
+            <div style={{ display: 'flex', margin: 'auto' }}>
+              <div>{player1.boardCount.length - 1}/9 </div>
+              <div className='tinyGreenCard'></div>
+            </div>
+            <div style={{ display: 'flex', margin: 'auto' }}>
+              <div>{player1.hand.length}/4</div>
+              <div className='tinyHandCard'></div>
+            </div>
+            <div style={{ display: 'flex' }}>
+              <div className="bubble" style={(player1.score.length > 0) ? { backgroundColor: 'red' } : {}}></div>
+              <div className="bubble" style={(player1.score.length > 1) ? { backgroundColor: 'red' } : {}}></div>
+              <div className="bubble" style={(player1.score.length > 2) ? { backgroundColor: 'red' } : {}}></div>
+            </div>
+          </>
+        }
       </div>
     </>
   )
