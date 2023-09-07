@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/simple-games/static/css/main.c1e17c40.css",
-    "main.js": "/simple-games/static/js/main.d3ce1471.js",
+    "main.js": "/simple-games/static/js/main.9f73cee2.js",
     "static/js/787.ec47c7cd.chunk.js": "/simple-games/static/js/787.ec47c7cd.chunk.js",
     "index.html": "/simple-games/index.html",
     "main.c1e17c40.css.map": "/simple-games/static/css/main.c1e17c40.css.map",
-    "main.d3ce1471.js.map": "/simple-games/static/js/main.d3ce1471.js.map",
+    "main.9f73cee2.js.map": "/simple-games/static/js/main.9f73cee2.js.map",
     "787.ec47c7cd.chunk.js.map": "/simple-games/static/js/787.ec47c7cd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c1e17c40.css",
-    "static/js/main.d3ce1471.js"
+    "static/js/main.9f73cee2.js"
   ]
 }
