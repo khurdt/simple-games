@@ -1,4 +1,4 @@
-import { addOrMinus, double, threeAndSix, twoAndFour } from './cardActions';
+import { addOrMinus, double, removeCard, threeAndSix, twoAndFour } from './cardActions';
 import { Plus, Minus } from 'react-feather';
 
 export default function TypeOfCard(c) {
@@ -19,7 +19,8 @@ export default function TypeOfCard(c) {
         condition: c.includes('D'),
         color: special,
         sign: '',
-        action: double
+        action: double,
+        remove: removeCard
       },
       {
         name: 'plusAndMinusT',
@@ -27,42 +28,48 @@ export default function TypeOfCard(c) {
         color: special,
         action: '',
         sign: '',
-        action: addOrMinus
+        action: addOrMinus,
+        remove: removeCard
       },
       {
         name: 'twoAndFour',
         condition: c.includes('2 & 4'),
         color: special,
         sign: '',
-        action: twoAndFour
+        action: twoAndFour,
+        remove: twoAndFour
       },
       {
         name: 'threeAndSix',
         condition: c.includes('3 & 6'),
         color: special,
         sign: '',
-        action: threeAndSix
+        action: threeAndSix,
+        remove: threeAndSix
       },
       {
         name: 'plusAndminus',
         condition: (c.includes('+-') && !(c.includes('T'))),
         color: 'blue',
         sign: <Plus width={13} height={13} color={'white'} />,
-        action: addOrMinus
+        action: addOrMinus,
+        remove: removeCard
       },
       {
         name: 'plus',
         condition: (c.includes('+') && !(c.includes('-'))),
         color: 'blue',
         sign: <Plus width={13} height={13} color={'white'} />,
-        action: addOrMinus
+        action: addOrMinus,
+        remove: removeCard
       },
       {
         name: 'minus',
         condition: (c.includes('-') && !(c.includes('+'))),
         color: 'red',
         sign: <Minus width={13} height={13} color={'white'} />,
-        action: addOrMinus
+        action: addOrMinus,
+        remove: removeCard
       }
     ];
 

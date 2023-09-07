@@ -10,7 +10,6 @@ export const double = (c, boardCount) => {
     return boardCount;
 }
 
-
 export const twoAndFour = (c, boardCount) => {
     let condition = [2, 4, -2, -4];
     let twoAndFourReversed = boardCount.map(n => {
@@ -28,5 +27,10 @@ export const threeAndSix = (c, boardCount) => {
         return n
     });
     return threeAndSixReversed;
+}
+
+export const removeCard = (c, boardCount) => {
+    boardCount.pop();
+    return boardCount;
 }
 

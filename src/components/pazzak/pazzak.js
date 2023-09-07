@@ -149,23 +149,25 @@ function Pazzak(props, ref) {
       } else if (player1Card === player2Card) { whoGoesFirst(); }
   }
 
-  const playerTurn = (number, cardIndex) => {
+  const playerTurn = (number, cardIndex, originalCard) => {
     let player = (turn.player === 1) ? player1 : player2;
     const card = TypeOfCard(number);
+    console.log(originalCard, number);
 
+    //getting rid of card from Hand
     if (card.name !== 'deck') {
-      const newHand = player.hand.filter((c, i) => i !== cardIndex);
+      const newHand = player.hand.filter((number, i) => i !== cardIndex);
       player.hand = newHand;
     }
-
+    //updating boardCount and totalCount
     const newBoardCount = card.action(number, player.boardCount);
     const total = newBoardCount.reduce((total, a) => total += a, 0);
     player.boardCount = newBoardCount;
     player.totalCount = total;
-
+    //updating board cards
     const index = player.board.indexOf('a');
-    player.board[index] = number;
-    console.log(deck);
+    player.board[index] = (originalCard) ? originalCard : number;
+    console.log(player.board);
     setRefresh(!refresh);
     if (total === 20) { handleStand(); }
   }
@@ -205,18 +207,41 @@ function Pazzak(props, ref) {
     });
   }
 
-  const playFromHand = (c, i, option) => {
+  const playFromHand = (card, i, option) => {
+    console.log(card);
     const player = (turn.player === 1) ? player1 : player2;
     turn.played = true;
-    let plus = `+${c.slice(2, 3)}`;
-    let minus = `-${c.slice(2, 3)}`;
-    const winIfTie = (c.includes('T'));
+    let plus = `+${card.slice(2, 3)}`;
+    let minus = `-${card.slice(2, 3)}`;
+    const winIfTie = (card.includes('T'));
     if (option) {
       if (winIfTie) { player.garauntee = winIfTie }
       let findSign = optionSign.find((e) => e.index === i && e.player === player.player);
-      playerTurn(((findSign.isPlus) ? plus : minus), i)
+      playerTurn(((findSign.isPlus) ? plus : minus), i, card)
     } else {
-      playerTurn(c, i);
+      playerTurn(card, i, card);
+    }
+  }
+
+  const returnCardToHand = (c, i) => {
+    let player = (turn.player === 1) ? player1 : player2;
+    if (turn.played === true && (i === player.board.indexOf('a') - 1)) {
+      turn.played = false;
+      player.garauntee = false;
+      const card = TypeOfCard(c);
+      console.log(c, player.hand);
+
+      player.hand.unshift(c);
+
+      const newBoardCount = card.remove(c, player.boardCount);
+      const total = newBoardCount.reduce((total, a) => total += a, 0);
+      player.boardCount = newBoardCount;
+      player.totalCount = total;
+
+      const index = (player.board.indexOf('a') - 1);
+      player.board[index] = 'a';
+      console.log(player.board);
+      setRefresh(!refresh);
     }
   }
 
@@ -281,7 +306,10 @@ function Pazzak(props, ref) {
           {player1.board.map((c, i) => {
             return (
               <Col key={i} xs={4} sm={4} md={4}>
-                <div className='cell' style={c === 'a' ? { backgroundColor: '#292929' } : {}}>
+                <div
+                  className='cell'
+                  style={c === 'a' ? { backgroundColor: '#292929' } : {}}
+                  onClick={() => { returnCardToHand(c, i) }}>
                   {(c !== 'a') &&
                     <PazzakCard c={c} />
                   }
@@ -333,7 +361,10 @@ function Pazzak(props, ref) {
           {player2.board.map((c, i) => {
             return (
               <Col key={i} xs={4} sm={4} md={4}>
-                <div className='cell' style={c === 'a' ? { backgroundColor: '#292929' } : {}}>
+                <div
+                  className='cell'
+                  style={c === 'a' ? { backgroundColor: '#292929' } : {}}
+                  onClick={() => { returnCardToHand(c, i) }}>
                   {(c !== 'a') &&
                     <PazzakCard c={c} />
                   }
