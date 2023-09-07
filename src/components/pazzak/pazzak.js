@@ -1,7 +1,7 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+// import Button from 'react-bootstrap/Button';
 import './pazzak.css';
 import PazzakCard from './pazzak-card/pazzakCard';
 import TypeOfCard from './typeOfCard';
@@ -9,6 +9,7 @@ import SpinAnimation from './spinAnimationButton/spin';
 import conditionsArray from './condtionsArray';
 import conditionResponseArray from './conditionResponseArray';
 import PlayerButtons from './playerButtons-component/playerButtons';
+// import { Result } from 'express-validator';
 
 function Pazzak(props, ref) {
   const { navigate } = props;
@@ -76,14 +77,14 @@ function Pazzak(props, ref) {
     }
   }));
 
-  const endTheGame = (result, player) => {
+  const endTheGame = (result) => {
+    console.log(result);
     setEndGame(true);
     endGameModal.result = result;
-    if (player) { endGameModal.player = player; }
   }
 
   const startGame = async () => {
-    if (player1.score.length !== 3 && player2.score.length !== 3) {
+    if (!(player1.score.length > 2) && !(player2.score.length > 2)) {
       await newDeck().then(() => {
         player1.board = Array(9).fill('a');
         player1.boardCount = [0];
@@ -185,6 +186,7 @@ function Pazzak(props, ref) {
     return new Promise((resolve, reject) => {
       let conditions = conditionsArray(currentPlayer, otherPlayer, player1, player2);
       for (let i = 0; i < conditions.length; i++) {
+        console.log(conditions[i].condition);
         (conditions[i].condition) && resolve(conditions[i].name);
       }
     });
@@ -219,14 +221,28 @@ function Pazzak(props, ref) {
   }
 
   const handleStand = () => {
-    currentPlayer.stand = true;
-    endTurn();
+    standPromise().then((result) => {
+      if (result === true) {
+        endTurn();
+      }
+    })
   }
 
-  const endTurn = async () => {
-    await checkWin().then((result) => {
+  const standPromise = () => {
+    return new Promise((resolve, reject) => {
+      currentPlayer.stand = true;
+      if (currentPlayer.stand === true) {
+        resolve(currentPlayer.stand);
+      } else {
+        console.log(currentPlayer.stand);
+      }
+    })
+  }
+
+  const endTurn = () => {
+    checkWin().then((result) => {
       console.log(result);
-      let conditionsArray = ['under', '20']
+      let conditionsArray = ['under', '20', 'stood']
       if (!endGame && conditionsArray.includes(result)) {
         if (!otherPlayer.stand) {
           turn.player = otherPlayer.player;
@@ -245,7 +261,7 @@ function Pazzak(props, ref) {
   return (
     <>
       {endGame &&
-        <div className='endGameModal'>Player {endGameModal.player} {endGameModal.result}
+        <div className='endGameModal'>{endGameModal.result}
           <div onClick={startGame} style={{ width: '150px', marginTop: '10px', paddingTop: '3px' }} className='customButton'>OK</div>
         </div>
       }
@@ -358,10 +374,16 @@ function Pazzak(props, ref) {
       <div className='playerStatus' style={{ display: 'flex', padding: '10px', marginTop: '20px' }}>
         {isplayer1Turn ?
           <>
-            <div>Player 2:</div>
+            <div className='mt-1'>Player 2:</div>
             <div className='otherPlayerCount'>{player2.totalCount}</div>
-            <div style={{ margin: 'auto' }}>{player2.boardCount.length - 1}/9</div>
-            <div style={{ margin: 'auto' }}>{player2.hand.length}/4</div>
+            <div style={{ display: 'flex', margin: 'auto' }}>
+              <div>{player2.boardCount.length - 1}/9 </div>
+              <div className='tinyGreenCard'></div>
+            </div>
+            <div style={{ display: 'flex', margin: 'auto' }}>
+              <div>{player2.hand.length}/4</div>
+              <div className='tinyHandCard'></div>
+            </div>
             <div style={{ display: 'flex' }}>
               <div className="bubble" style={(player2.score.length > 0) ? { backgroundColor: 'red' } : {}}></div>
               <div className="bubble" style={(player2.score.length > 1) ? { backgroundColor: 'red' } : {}}></div>
@@ -370,7 +392,7 @@ function Pazzak(props, ref) {
           </>
           :
           <>
-            <div >Player 1:</div>
+            <div className='mt-1'>Player 1:</div>
             <div className='otherPlayerCount'>{player1.totalCount}</div>
             <div style={{ display: 'flex', margin: 'auto' }}>
               <div>{player1.boardCount.length - 1}/9 </div>

@@ -36,6 +36,10 @@ export default function conditionsArray(currentPlayer, otherPlayer) {
       condition: (totalCount < 20 && !allSlotsFilled && !stand)
     },
     {
+      name: 'stood',
+      condition: (stand && !otherPlayer.stand)
+    },
+    {
       name: '20',
       condition: (totalCount === 20)
     }
