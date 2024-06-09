@@ -9,7 +9,9 @@ import './pickCards.css';
 
 export default function PickCards(props) {
     const { navigate } = props;
-    const [cards, setCards] = useState(['+1', '+2', '+3', '+4', '+5', '+6', '-1', '-2', '-3', '-4', '-5', '-6', '+-1', '+-2', '+-3', '+-4', '+-5', '+-6', 'D', '+-1T', '2 & 4', '3 & 6']);
+    const [cards, setCards] = useState({
+        set: ['+1', '+2', '+3', '+4', '+5', '+6', '-1', '-2', '-3', '-4', '-5', '-6', '+-1', '+-2', '+-3', '+-4', '+-5', '+-6', 'D', '+-1T', '2 & 4', '3 & 6']
+    });
     const [startGame, setStartGame] = useState(false);
     const [player1Cards, setPlayer1Cards] = useState(Array(10).fill('a'));
     const [player2Cards, setPlayer2Cards] = useState(Array(10).fill('a'));
@@ -35,7 +37,7 @@ export default function PickCards(props) {
     const handleAddCard = (array, card, cardIndex) => {
         let index = array.indexOf('a');
         array[index] = card;
-        cards[cardIndex] = `${card}a`;
+        cards.set[cardIndex] = `${card}a`;
         setTurn({ ...turn, played: true });
         setRefresh(!refresh);
         return array;
@@ -48,7 +50,7 @@ export default function PickCards(props) {
             setPlayer2Cards(handleRemoveCard(player2Cards, card, cardIndex));
     }
     const handleRemoveCard = (array, card, cardIndex) => {
-        cards[cards.indexOf(`${card}a`)] = card;
+        cards.set[cards.set.indexOf(`${card}a`)] = card;
         array[cardIndex] = 'a';
         setTurn({ ...turn, played: false });
         setRefresh(!refresh);
@@ -67,21 +69,70 @@ export default function PickCards(props) {
         }
     }
 
-    const autoPick = () => {
-        let filteredCards = cards.filter((c) => !c.includes('a'));
-        while (player1Cards.indexOf('a') > -1) {
+    const autoPickForPlayer1 = () => {
+        return new Promise((resolve, reject) => {
+            let filteredCards = cards.set.filter((c) => !c.includes('a'));
             let randomCardIndex = Math.floor(Math.random() * (filteredCards.length - 1));
             player1Cards[player1Cards.indexOf('a')] = filteredCards[randomCardIndex];
             filteredCards = filteredCards.filter((c, i) => i !== randomCardIndex);
+            cards.set = filteredCards;
             setRefresh(!refresh);
-        }
-        while (player2Cards.indexOf('a') > -1) {
+            setTimeout(() => {
+                resolve(cards.set);
+            }, "1000");
+        })
+    }
+
+    const autoPickForPlayer2 = () => {
+        return new Promise((resolve, reject) => {
+            let filteredCards = cards.set.filter((c) => !c.includes('a'));
             let randomCardIndex = Math.floor(Math.random() * (filteredCards.length - 1));
             player2Cards[player2Cards.indexOf('a')] = filteredCards[randomCardIndex];
             filteredCards = filteredCards.filter((c, i) => i !== randomCardIndex);
+            cards.set = filteredCards;
             setRefresh(!refresh);
+            setTimeout(() => {
+                resolve(cards.set);
+            }, "1000");
+        })
+    }
+
+    const autoPick = () => {
+        if (turn.player === '1' && player1Cards.indexOf('a') > -1) {
+            autoPickForPlayer1().then(() => {
+                turn.player = '2';
+                setRefresh(!refresh);
+                autoPick();
+            })
+        } else if (turn.player === '2' && player2Cards.indexOf('a') > -1) {
+            autoPickForPlayer2().then(() => {
+                turn.player = '1';
+                setRefresh(!refresh);
+                autoPick();
+            })
+        } else if (player1Turn && player1Cards.indexOf('a') === -1) {
+            turn.player = '2';
+            if (player2Cards.indexOf('a') > -1) {
+                autoPickForPlayer2().then(() => { })
+            }
         }
     }
+
+    // const autoPick = () => {
+    //     let filteredCards = cards.set.filter((c) => !c.includes('a'));
+    //     while (player1Cards.indexOf('a') > -1) {
+    //         let randomCardIndex = Math.floor(Math.random() * (filteredCards.length - 1));
+    //         player1Cards[player1Cards.indexOf('a')] = filteredCards[randomCardIndex];
+    //         filteredCards = filteredCards.filter((c, i) => i !== randomCardIndex);
+    //         setRefresh(!refresh);
+    //     }
+    //     while (player2Cards.indexOf('a') > -1) {
+    //         let randomCardIndex = Math.floor(Math.random() * (filteredCards.length - 1));
+    //         player2Cards[player2Cards.indexOf('a')] = filteredCards[randomCardIndex];
+    //         filteredCards = filteredCards.filter((c, i) => i !== randomCardIndex);
+    //         setRefresh(!refresh);
+    //     }
+    // }
 
     const pickFourCards = () => {
         if (allSlotsFilled) {
@@ -118,7 +169,7 @@ export default function PickCards(props) {
                         <Col className="mt-5" xs={smartPhone ? 12 : 8} sm={smartPhone ? 12 : 8} md={smartPhone ? 12 : 8} >
                             <div className='container' ref={scrollRef}>
                                 <div className="child">
-                                    {cards.map((c, i) => {
+                                    {cards.set.map((c, i) => {
                                         return (
                                             <Col key={i} className='childCards'>
                                                 <div className='cell' onClick={() => addCard(c, i)}>

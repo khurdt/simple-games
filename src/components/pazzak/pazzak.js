@@ -43,7 +43,8 @@ function Pazzak(props, ref) {
   })
   const [turn, setTurn] = useState({
     player: 0,
-    played: false
+    played: false,
+    gettingCard: true
   });
   let cards = Array.from(Array(11).keys()).slice(1);
   const [deck, setDeck] = useState(
@@ -61,6 +62,7 @@ function Pazzak(props, ref) {
   let currentPlayer = (isplayer1Turn) ? player1 : player2;
   let otherPlayer = (isplayer1Turn) ? player2 : player1;
   const notPlayedCard = turn.played === false;
+  const gettingCard = turn.gettingCard === true;
 
   useEffect(() => {
 
@@ -124,29 +126,47 @@ function Pazzak(props, ref) {
   }
 
   const getCard = () => {
-    let index = Math.floor(Math.random() * (deck.length - 1));
-    let number = deck.reduce((a, e, i) => (i === index) ? a = e : a);
-    let newDeck = deck.filter((e, i) => { return i !== index })
-    setDeck(newDeck);
-    localStorage.setItem('deck', JSON.stringify(newDeck));
-    return number;
+    turn.gettingCard = true;
+    return new Promise((resolve, reject) => {
+      let index = Math.floor(Math.random() * (deck.length - 1));
+      let greencard = deck.reduce((a, e, i) => (i === index) ? a = e : a);
+      let newDeck = deck.filter((e, i) => { return i !== index })
+      setDeck(newDeck);
+      localStorage.setItem('deck', JSON.stringify(newDeck));
+      setTimeout(() => {
+        resolve(greencard);
+      }, "500");
+    })
   }
 
   const whoGoesFirst = async () => {
-    let player1Card = getCard();
-    let player2Card = getCard();
-    if (player1Card > player2Card) {
-      await newDeck().then(() => {
-        turn.player = 1;
-        playerTurn(getCard());
-      }).catch((error) => console.log(error));
-    } else
-      if (player1Card < player2Card) {
-        await newDeck().then(() => {
-          turn.player = 2;
-          playerTurn(getCard());
-        }).catch((error) => console.log(error));
-      } else if (player1Card === player2Card) { whoGoesFirst(); }
+    turn.gettingCard = true;
+    let player1Card;
+    let player2Card;
+    getCard().then((greencard) => {
+      player1Card = greencard
+      getCard().then((greencard) => {
+        player2Card = greencard
+        if (player1Card > player2Card) {
+          newDeck().then(() => {
+            turn.player = 1;
+            getCard().then((greencard) => {
+              turn.gettingCard = false;
+              playerTurn(greencard)
+            });
+          }).catch((error) => console.log(error));
+        } else
+          if (player1Card < player2Card) {
+            newDeck().then(() => {
+              turn.player = 2;
+              getCard().then((greencard) => {
+                turn.gettingCard = false;
+                playerTurn(greencard)
+              });
+            }).catch((error) => console.log(error));
+          } else if (player1Card === player2Card) { whoGoesFirst(); }
+      });
+    });
   }
 
   const playerTurn = (number, cardIndex, originalCard) => {
@@ -272,10 +292,16 @@ function Pazzak(props, ref) {
         if (!otherPlayer.stand) {
           turn.player = otherPlayer.player;
           turn.played = false;
-          playerTurn(getCard());
+          getCard().then((greencard) => {
+            playerTurn(greencard)
+            turn.gettingCard = false;
+          });
         } else if (otherPlayer.stand && !currentPlayer.stand) {
           turn.played = false;
-          playerTurn(getCard());
+          getCard().then((greencard) => {
+            turn.gettingCard = false;
+            playerTurn(greencard)
+          });
         }
       }
     }).catch((error) => console.log(error))
@@ -324,7 +350,7 @@ function Pazzak(props, ref) {
               return (
                 <Col key={i} xs={3} sm={3} md={3}>
                   <div className='cell' style={{ cursor: 'pointer' }}
-                    onClick={() => { (isplayer1Turn && notPlayedCard && !endGame) && playFromHand(c, i, option); }}>
+                    onClick={() => { (isplayer1Turn && notPlayedCard && !endGame && (gettingCard === false)) && playFromHand(c, i, option); }}>
                     {(c !== 'a') &&
                       <PazzakCard c={c} />
                     }
@@ -379,7 +405,7 @@ function Pazzak(props, ref) {
               return (
                 <Col key={i} xs={3} sm={3} md={3}>
                   <div className='cell' style={{ cursor: 'pointer' }}
-                    onClick={() => { (!isplayer1Turn && notPlayedCard && !endGame) && playFromHand(c, i, option); }}>
+                    onClick={() => { (!isplayer1Turn && notPlayedCard && !endGame && (gettingCard === false)) && playFromHand(c, i, option); console.log(gettingCard); }}>
                     {(c !== 'a') &&
                       <PazzakCard c={c} />
                     }
