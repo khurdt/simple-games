@@ -44,7 +44,7 @@ function Pazzak(props, ref) {
   const [turn, setTurn] = useState({
     player: 0,
     played: false,
-    gettingCard: true
+    pause: true
   });
   let cards = Array.from(Array(11).keys()).slice(1);
   const [deck, setDeck] = useState(
@@ -62,11 +62,7 @@ function Pazzak(props, ref) {
   let currentPlayer = (isplayer1Turn) ? player1 : player2;
   let otherPlayer = (isplayer1Turn) ? player2 : player1;
   const notPlayedCard = turn.played === false;
-  const gettingCard = turn.gettingCard === true;
-
-  useEffect(() => {
-
-  }, []);
+  const pause = turn.pause === true;
 
   useImperativeHandle(ref, () => ({
     async startGame(p1Hand, p2Hand) {
@@ -126,7 +122,7 @@ function Pazzak(props, ref) {
   }
 
   const getCard = () => {
-    turn.gettingCard = true;
+    turn.pause = true;
     return new Promise((resolve, reject) => {
       let index = Math.floor(Math.random() * (deck.length - 1));
       let greencard = deck.reduce((a, e, i) => (i === index) ? a = e : a);
@@ -140,7 +136,7 @@ function Pazzak(props, ref) {
   }
 
   const whoGoesFirst = async () => {
-    turn.gettingCard = true;
+    turn.pause = true;
     let player1Card;
     let player2Card;
     getCard().then((greencard) => {
@@ -151,7 +147,7 @@ function Pazzak(props, ref) {
           newDeck().then(() => {
             turn.player = 1;
             getCard().then((greencard) => {
-              turn.gettingCard = false;
+              turn.pause = false;
               playerTurn(greencard)
             });
           }).catch((error) => console.log(error));
@@ -160,7 +156,7 @@ function Pazzak(props, ref) {
             newDeck().then(() => {
               turn.player = 2;
               getCard().then((greencard) => {
-                turn.gettingCard = false;
+                turn.pause = false;
                 playerTurn(greencard)
               });
             }).catch((error) => console.log(error));
@@ -172,7 +168,6 @@ function Pazzak(props, ref) {
   const playerTurn = (number, cardIndex, originalCard) => {
     let player = (turn.player === 1) ? player1 : player2;
     const card = TypeOfCard(number);
-    console.log(originalCard, number);
 
     //getting rid of card from Hand
     if (card.name !== 'deck') {
@@ -187,9 +182,7 @@ function Pazzak(props, ref) {
     //updating board cards
     const index = player.board.indexOf('a');
     player.board[index] = (originalCard) ? originalCard : number;
-    console.log(player.board);
     setRefresh(!refresh);
-    if (total === 20) { handleStand(); }
   }
 
   const checkWin = () => {
@@ -294,12 +287,12 @@ function Pazzak(props, ref) {
           turn.played = false;
           getCard().then((greencard) => {
             playerTurn(greencard)
-            turn.gettingCard = false;
+            turn.pause = false;
           });
         } else if (otherPlayer.stand && !currentPlayer.stand) {
           turn.played = false;
           getCard().then((greencard) => {
-            turn.gettingCard = false;
+            turn.pause = false;
             playerTurn(greencard)
           });
         }
@@ -350,7 +343,7 @@ function Pazzak(props, ref) {
               return (
                 <Col key={i} xs={3} sm={3} md={3}>
                   <div className='cell' style={{ cursor: 'pointer' }}
-                    onClick={() => { (isplayer1Turn && notPlayedCard && !endGame && (gettingCard === false)) && playFromHand(c, i, option); }}>
+                    onClick={() => { (isplayer1Turn && notPlayedCard && !endGame && (pause === false)) && playFromHand(c, i, option); }}>
                     {(c !== 'a') &&
                       <PazzakCard c={c} />
                     }
@@ -364,14 +357,16 @@ function Pazzak(props, ref) {
               )
             })}
           </Row>
+          {/* Player END TURN OR STAND decisions */}
           <div style={{ height: '70px', textAlign: 'center' }}>
-            {(!endGame && isplayer1Turn) ?
+            {(!endGame && isplayer1Turn && !pause) ?
               <PlayerButtons endTurn={endTurn} handleStand={handleStand} />
               : (player1.stand) &&
               <h5 className='mt-4'>Stand</h5>
             }
           </div>
         </Row>
+        {/* Player Information */}
         <Row className={turn.player === 2 ? 'player2Board' : 'player2Board hide'}
           style={(turn.player !== 2 && window.innerWidth < 700) ? { display: 'none' } : { width: '300px', position: 'relative', margin: 'auto' }}>
           <div className="player2">
@@ -384,6 +379,7 @@ function Pazzak(props, ref) {
             <div className="bubble" style={(player2.score.length > 1) ? { backgroundColor: 'red' } : {}}></div>
             <div className="bubble" style={(player2.score.length > 2) ? { backgroundColor: 'red' } : {}}></div>
           </div>
+          {/* Player Green Cards */}
           {player2.board.map((c, i) => {
             return (
               <Col key={i} xs={4} sm={4} md={4}>
@@ -398,6 +394,7 @@ function Pazzak(props, ref) {
               </Col>
             )
           })}
+          {/*Player Personal Playing Cards */}
           <Row className='mr-auto pt-3 justify-content-center' style={{ width: '400px', position: 'relative', minHeight: '110px' }}>
             {player2.hand.map((c, i) => {
               const type = TypeOfCard(c);
@@ -405,7 +402,7 @@ function Pazzak(props, ref) {
               return (
                 <Col key={i} xs={3} sm={3} md={3}>
                   <div className='cell' style={{ cursor: 'pointer' }}
-                    onClick={() => { (!isplayer1Turn && notPlayedCard && !endGame && (gettingCard === false)) && playFromHand(c, i, option); console.log(gettingCard); }}>
+                    onClick={() => { (!isplayer1Turn && notPlayedCard && !endGame && (pause === false)) && playFromHand(c, i, option); console.log(pause); }}>
                     {(c !== 'a') &&
                       <PazzakCard c={c} />
                     }
@@ -419,6 +416,7 @@ function Pazzak(props, ref) {
               )
             })}
           </Row>
+          {/*Player END TURN OR STAND decisions */}
           <div style={{ height: '70px', textAlign: 'center' }}>
             {(!endGame && !isplayer1Turn) ?
               <PlayerButtons endTurn={endTurn} handleStand={handleStand} />

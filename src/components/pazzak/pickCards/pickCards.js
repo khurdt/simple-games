@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -18,7 +18,8 @@ export default function PickCards(props) {
     const [refresh, setRefresh] = useState(false);
     const [turn, setTurn] = useState({
         player: '1',
-        played: false
+        played: false,
+        pause: false
     });
     const player1Turn = turn.player === '1';
     const notPlayedCard = turn.played === false;
@@ -27,6 +28,9 @@ export default function PickCards(props) {
     const smartPhone = (window.innerWidth < 850);
     const childRef = useRef(null);
 
+    const Refresh = () => {
+        setCards({ ...cards, set: cards.set })
+    }
 
     const addCard = (card, cardIndex) => {
         (player1Turn && player1Cards.indexOf('a') > -1 && notPlayedCard) ?
@@ -39,7 +43,7 @@ export default function PickCards(props) {
         array[index] = card;
         cards.set[cardIndex] = `${card}a`;
         setTurn({ ...turn, played: true });
-        setRefresh(!refresh);
+        Refresh();
         return array;
     }
 
@@ -53,7 +57,7 @@ export default function PickCards(props) {
         cards.set[cards.set.indexOf(`${card}a`)] = card;
         array[cardIndex] = 'a';
         setTurn({ ...turn, played: false });
-        setRefresh(!refresh);
+        Refresh();
         return array;
     }
 
@@ -61,53 +65,54 @@ export default function PickCards(props) {
         if (player1Turn) {
             turn.player = '2';
             turn.played = false;
-            setRefresh(!refresh);
+            Refresh();
         } else {
             turn.player = '1';
             turn.played = false;
-            setRefresh(!refresh);
+            Refresh();
         }
     }
 
     const autoPickForPlayer1 = () => {
         return new Promise((resolve, reject) => {
             let filteredCards = cards.set.filter((c) => !c.includes('a'));
-            let randomCardIndex = Math.floor(Math.random() * (filteredCards.length - 1));
+            let randomCardIndex = Math.floor(Math.random() * (filteredCards.length));
             player1Cards[player1Cards.indexOf('a')] = filteredCards[randomCardIndex];
             filteredCards = filteredCards.filter((c, i) => i !== randomCardIndex);
             cards.set = filteredCards;
-            setRefresh(!refresh);
+            Refresh();
             setTimeout(() => {
                 resolve(cards.set);
-            }, "1000");
+            }, "500");
         })
     }
 
     const autoPickForPlayer2 = () => {
         return new Promise((resolve, reject) => {
             let filteredCards = cards.set.filter((c) => !c.includes('a'));
-            let randomCardIndex = Math.floor(Math.random() * (filteredCards.length - 1));
+            let randomCardIndex = Math.floor(Math.random() * (filteredCards.length));
             player2Cards[player2Cards.indexOf('a')] = filteredCards[randomCardIndex];
             filteredCards = filteredCards.filter((c, i) => i !== randomCardIndex);
             cards.set = filteredCards;
-            setRefresh(!refresh);
+            Refresh();
             setTimeout(() => {
                 resolve(cards.set);
-            }, "1000");
+            }, "500");
         })
     }
 
     const autoPick = () => {
+        turn.pause = true;
         if (turn.player === '1' && player1Cards.indexOf('a') > -1) {
             autoPickForPlayer1().then(() => {
                 turn.player = '2';
-                setRefresh(!refresh);
+                Refresh();
                 autoPick();
             })
         } else if (turn.player === '2' && player2Cards.indexOf('a') > -1) {
             autoPickForPlayer2().then(() => {
                 turn.player = '1';
-                setRefresh(!refresh);
+                Refresh();
                 autoPick();
             })
         } else if (player1Turn && player1Cards.indexOf('a') === -1) {
@@ -117,22 +122,6 @@ export default function PickCards(props) {
             }
         }
     }
-
-    // const autoPick = () => {
-    //     let filteredCards = cards.set.filter((c) => !c.includes('a'));
-    //     while (player1Cards.indexOf('a') > -1) {
-    //         let randomCardIndex = Math.floor(Math.random() * (filteredCards.length - 1));
-    //         player1Cards[player1Cards.indexOf('a')] = filteredCards[randomCardIndex];
-    //         filteredCards = filteredCards.filter((c, i) => i !== randomCardIndex);
-    //         setRefresh(!refresh);
-    //     }
-    //     while (player2Cards.indexOf('a') > -1) {
-    //         let randomCardIndex = Math.floor(Math.random() * (filteredCards.length - 1));
-    //         player2Cards[player2Cards.indexOf('a')] = filteredCards[randomCardIndex];
-    //         filteredCards = filteredCards.filter((c, i) => i !== randomCardIndex);
-    //         setRefresh(!refresh);
-    //     }
-    // }
 
     const pickFourCards = () => {
         if (allSlotsFilled) {
@@ -172,7 +161,7 @@ export default function PickCards(props) {
                                     {cards.set.map((c, i) => {
                                         return (
                                             <Col key={i} className='childCards'>
-                                                <div className='cell' onClick={() => addCard(c, i)}>
+                                                <div className='cell' onClick={() => (!turn.pause) && addCard(c, i)}>
                                                     {(!c.includes('a')) &&
                                                         <PazzakCard c={c} />
                                                     }
@@ -191,8 +180,8 @@ export default function PickCards(props) {
                                         return (
                                             <Col key={i}
                                                 style={turn.player === '1' ? { display: 'flex' } : { display: 'none' }}
-                                                className={turn.player === '1' ? 'childCards animation' : 'childCards'}
-                                                onClick={() => ((player1Turn) && c !== 'a') && removeCard(c, i)} >
+                                                className={(turn.player === '1' && (!turn.pause)) ? 'childCards animation' : 'childCards'}
+                                                onClick={() => ((player1Turn && (!turn.pause) && c !== 'a')) && removeCard(c, i)} >
                                                 <div className='cell'>
                                                     {!c.includes('a') &&
                                                         <PazzakCard c={c} />
@@ -205,8 +194,8 @@ export default function PickCards(props) {
                                         return (
                                             <Col key={i}
                                                 style={turn.player === '2' ? { display: 'flex' } : { display: 'none' }}
-                                                className={turn.player === '2' ? 'childCards animation' : 'childCards'}
-                                                onClick={() => (!player1Turn && c !== 'a') && removeCard(c, i)} >
+                                                className={(turn.player === '2' && (!turn.pause)) ? 'childCards animation' : 'childCards'}
+                                                onClick={() => (!player1Turn && (!turn.pause) && c !== 'a') && removeCard(c, i)} >
                                                 <div className='cell'>
                                                     {!c.includes('a') &&
                                                         <PazzakCard c={c} />
@@ -222,18 +211,21 @@ export default function PickCards(props) {
                             {allSlotsFilled ?
                                 <Button style={{ maxWidth: '300px', margin: 'auto' }} onClick={() => pickFourCards()}>Start Game</Button>
                                 :
-                                <>
-                                    <Button
-                                        style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }}
-                                        onClick={() => endTurn()}>
-                                        End Turn
-                                    </Button>
-                                    <Button
-                                        style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }}
-                                        onClick={() => autoPick()}>
-                                        Auto Pick
-                                    </Button>
-                                </>
+                                (turn.pause) ?
+                                    <></>
+                                    :
+                                    <>
+                                        <Button
+                                            style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }}
+                                            onClick={() => endTurn()}>
+                                            End Turn
+                                        </Button>
+                                        <Button
+                                            style={{ maxWidth: '300px', textAlign: 'center', margin: '30px' }}
+                                            onClick={() => autoPick()}>
+                                            Auto Pick
+                                        </Button>
+                                    </>
                             }
                         </Col>
                     </Row>
